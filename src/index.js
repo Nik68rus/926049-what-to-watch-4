@@ -9,8 +9,10 @@ const init = () => {
     date: `2014`,
   };
 
+  const movies = [`Fantastic Beasts`, `Bohemian Rhapsody`, `Macbeth`, `Lion King`, `1+1`];
+
   ReactDOM.render(
-      <App movie={promoMovie.title} genre={promoMovie.genre} release={promoMovie.date}/>,
+      <App movie={promoMovie} movies={movies}/>,
       document.querySelector(`#root`)
   );
 };
