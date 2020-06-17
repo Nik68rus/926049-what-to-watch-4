@@ -1,6 +1,7 @@
 import React from 'react';
 import ReactDOM from 'react-dom';
 import App from './components/app/app.jsx';
+import movies from './mocks/films';
 
 const init = () => {
   const promoMovie = {
@@ -8,8 +9,6 @@ const init = () => {
     genre: `Drama`,
     date: `2014`,
   };
-
-  const movies = [`Fantastic Beasts`, `Bohemian Rhapsody`, `Macbeth`, `Lion King`, `1+1`];
 
   ReactDOM.render(
       <App movie={promoMovie} movies={movies}/>,
