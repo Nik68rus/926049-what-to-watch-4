@@ -124,9 +124,11 @@ const Main = (props) => {
 
 Main.propTypes = {
   mainMovie: PropTypes.shape({
+    id: PropTypes.string.isRequired,
+    poster: PropTypes.string.isRequired,
     title: PropTypes.string.isRequired,
     genre: PropTypes.string.isRequired,
-    date: PropTypes.string.isRequired
+    date: PropTypes.string.isRequired,
   }).isRequired,
   movieList: PropTypes.array.isRequired,
 };

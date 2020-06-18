@@ -9,9 +9,11 @@ const App = (props) => {
 
 App.propTypes = {
   movie: PropTypes.shape({
+    id: PropTypes.string.isRequired,
+    poster: PropTypes.string.isRequired,
     title: PropTypes.string.isRequired,
     genre: PropTypes.string.isRequired,
-    date: PropTypes.string.isRequired
+    date: PropTypes.string.isRequired,
   }).isRequired,
   movies: PropTypes.array.isRequired,
 };

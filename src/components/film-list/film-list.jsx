@@ -8,16 +8,26 @@ class FilmList extends PureComponent {
     this.state = {
       activeCard: -1,
     };
+
+    this._handleCardMouseEnter = this._handleCardMouseEnter.bind(this);
+  }
+
+  _handleCardMouseEnter(id) {
+    this.setState((prevState) => {
+      return {
+        prevState,
+        activeCard: id,
+      };
+    });
   }
 
   render() {
     const {films} = this.props;
     return (
       <div className="catalog__movies-list">
-        {films.map((movie, i) => (
-          <Card key={movie.id} title={movie.title} poster={movie.poster} id={movie.id} onHover={() => {
-            this.setState({activeCard: i});
-            console.log(movie.id);
+        {films.map((movie) => (
+          <Card key={movie.id} movie={movie} onHover={() => {
+            this._handleCardMouseEnter(movie.id);
           }} />
         ))}
       </div>
