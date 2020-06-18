@@ -2,13 +2,22 @@ import React from 'react';
 import renderer from 'react-test-renderer';
 import App from './app';
 
-const mockMovie = {
-  title: `Test`,
-  genre: `Test`,
-  date: `Test`
-};
+const mockMovieList = [
+  {
+    id: `id1`,
+    poster: `img/fantastic-beasts-the-crimes-of-grindelwald.jpg`,
+    title: `Fantastic Beasts: The Crimes of Grindelwald`,
+    genre: `dramma`,
+    date: `2010`
+  },
+  {
+    id: `id2`,
+    poster: `img/bohemian-rhapsody.jpg`,
+    title: `Bohemian Rhapsody`,
+  },
+];
 
 it(`App correctly renders after relaunch`, () => {
-  const tree = renderer.create(<App movie={mockMovie} movies={[`Test1`, `Test2`, `Test3`]} />).toJSON();
+  const tree = renderer.create(<App movie={mockMovieList[0]} movies={mockMovieList} />).toJSON();
   expect(tree).toMatchSnapshot();
 });
