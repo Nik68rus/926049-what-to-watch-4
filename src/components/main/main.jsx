@@ -3,7 +3,7 @@ import PropTypes from 'prop-types';
 import FilmList from '../film-list/film-list.jsx';
 
 const Main = (props) => {
-  const {mainMovie, movieList} = props;
+  const {mainMovie, movieList, onCardClick} = props;
   return <>
       <section className="movie-card">
         <div className="movie-card__bg">
@@ -97,7 +97,7 @@ const Main = (props) => {
           </li>
         </ul>
 
-        <FilmList films={movieList} />
+        <FilmList films={movieList} onCardClick={onCardClick} />
 
         <div className="catalog__more">
           <button className="catalog__button" type="button">Show more</button>
@@ -125,12 +125,13 @@ const Main = (props) => {
 Main.propTypes = {
   mainMovie: PropTypes.shape({
     id: PropTypes.string.isRequired,
-    poster: PropTypes.string.isRequired,
+    preview: PropTypes.string.isRequired,
     title: PropTypes.string.isRequired,
     genre: PropTypes.string.isRequired,
     date: PropTypes.string.isRequired,
   }).isRequired,
   movieList: PropTypes.array.isRequired,
+  onCardClick: PropTypes.func.isRequired,
 };
 
 export default Main;
