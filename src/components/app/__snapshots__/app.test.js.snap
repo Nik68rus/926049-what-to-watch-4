@@ -261,10 +261,16 @@ Array [
           className="small-movie-card catalog__movies-card"
           onClick={[Function]}
           onMouseEnter={[Function]}
+          onMouseLeave={[Function]}
         >
           <div
             className="small-movie-card__image"
           >
+            <video
+              className="player__video"
+              poster="img/fantastic-beasts-the-crimes-of-grindelwald.jpg"
+              src="source"
+            />
             <img
               alt="Fantastic Beasts: The Crimes of Grindelwald"
               height="175"
@@ -287,10 +293,16 @@ Array [
           className="small-movie-card catalog__movies-card"
           onClick={[Function]}
           onMouseEnter={[Function]}
+          onMouseLeave={[Function]}
         >
           <div
             className="small-movie-card__image"
           >
+            <video
+              className="player__video"
+              poster="img/bohemian-rhapsody.jpg"
+              src="source"
+            />
             <img
               alt="Bohemian Rhapsody"
               height="175"

@@ -8,10 +8,16 @@ exports[`FilmList rendered correctly 1`] = `
     className="small-movie-card catalog__movies-card"
     onClick={[Function]}
     onMouseEnter={[Function]}
+    onMouseLeave={[Function]}
   >
     <div
       className="small-movie-card__image"
     >
+      <video
+        className="player__video"
+        poster="img/fantastic-beasts-the-crimes-of-grindelwald.jpg"
+        src="source"
+      />
       <img
         alt="Fantastic Beasts: The Crimes of Grindelwald"
         height="175"
@@ -34,10 +40,16 @@ exports[`FilmList rendered correctly 1`] = `
     className="small-movie-card catalog__movies-card"
     onClick={[Function]}
     onMouseEnter={[Function]}
+    onMouseLeave={[Function]}
   >
     <div
       className="small-movie-card__image"
     >
+      <video
+        className="player__video"
+        poster="img/fantastic-beasts-the-crimes-of-grindelwald.jpg"
+        src="source"
+      />
       <img
         alt="Fantastic Beasts: The Crimes of Grindelwald"
         height="175"

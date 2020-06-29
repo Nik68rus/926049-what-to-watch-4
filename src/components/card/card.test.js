@@ -6,6 +6,7 @@ const movie = {
   id: `id1`,
   preview: `img/fantastic-beasts-the-crimes-of-grindelwald.jpg`,
   title: `Fantastic Beasts: The Crimes of Grindelwald`,
+  src: `source`,
 };
 
 it(`Card rendered correctly`, () => {

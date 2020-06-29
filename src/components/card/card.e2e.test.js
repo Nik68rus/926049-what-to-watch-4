@@ -9,7 +9,7 @@ const mock = {
   id: `id1`,
   preview: `img/fantastic-beasts-the-crimes-of-grindelwald.jpg`,
   title: `Fantastic Beasts: The Crimes of Grindelwald`,
-};
+  src: `source`};
 
 it(`When user hover the card correct info in handler`, () => {
   const {id} = mock;

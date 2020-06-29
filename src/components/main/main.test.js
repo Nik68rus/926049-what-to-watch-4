@@ -5,6 +5,7 @@ import Main from './main';
 const mockMovieList = [
   {
     id: `id1`,
+    src: `source`,
     preview: `img/fantastic-beasts-the-crimes-of-grindelwald.jpg`,
     title: `Fantastic Beasts: The Crimes of Grindelwald`,
     genre: `fantasy`,
@@ -12,6 +13,7 @@ const mockMovieList = [
   },
   {
     id: `id2`,
+    src: `source`,
     preview: `img/bohemian-rhapsody.jpg`,
     title: `Bohemian Rhapsody`,
   },
