@@ -20,7 +20,9 @@ class App extends PureComponent {
         this.setState((prevState) => ({prevState, activeID: id}));
       }}/>;
     } else {
-      return <MoviePage movie={movies.find((item) => item.id === this.state.activeID)} />;
+      const choosenMovie = movies.find((item) => item.id === this.state.activeID);
+      const similarMovies = movies.filter((item) => item.genre === choosenMovie.genre).slice(0, 4);
+      return <MoviePage movie={choosenMovie} similarMovies={similarMovies}/>;
     }
   }
 
