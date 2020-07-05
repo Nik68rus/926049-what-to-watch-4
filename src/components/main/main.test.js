@@ -20,6 +20,6 @@ const mockMovieList = [
 ];
 
 it(`Main screen correctly renders after relaunch`, () => {
-  const tree = renderer.create(<Main mainMovie={mockMovieList[0]} movieList={mockMovieList} onCardClick={() => {}}/>).toJSON();
+  const tree = renderer.create(<Main mainMovie={mockMovieList[0]} movieList={mockMovieList} onCardClick={() => {}} genres={[]} activeGenre={``} shown={0} onGenreClick={() => {}} onShowMoreClick={() => {}} />).toJSON();
   expect(tree).toMatchSnapshot();
 });

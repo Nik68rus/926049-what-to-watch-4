@@ -11,16 +11,6 @@ const mock = {
   title: `Fantastic Beasts: The Crimes of Grindelwald`,
   src: `source`};
 
-it(`When user hover the card correct info in handler`, () => {
-  const {id} = mock;
-  const handleHover = jest.fn();
-  const handleClick = jest.fn();
-  const card = shallow(<Card movie={mock} onHover={handleHover} onClick={handleClick}/>);
-  const cardNode = card.find(`article`);
-  cardNode.simulate(`mouseEnter`);
-  expect(handleHover).toHaveBeenCalledWith(id);
-});
-
 it(`When user click the card correct info in handler`, () => {
   const {id} = mock;
   const handleHover = jest.fn();

@@ -8,6 +8,7 @@ const GenreList = (props) => {
       {genres.map((genre) => (
         <li key={genre} className={`catalog__genres-item ${genre === activeGenre ? `catalog__genres-item--active` : ``}`}>
           <a href="#" className="catalog__genres-link" onClick={(evt) => {
+            evt.preventDefault();
             onGenreClick(evt.target.textContent);
           }}>{genre}</a>
         </li>

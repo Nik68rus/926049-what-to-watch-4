@@ -16,9 +16,7 @@ class Card extends PureComponent {
   }
 
   _handleMouseEnter() {
-    const {movie, onHover} = this.props;
     this.setState((prevState) => ({prevState, isPlaying: true}));
-    onHover(movie.id);
   }
 
   _handleMouseLeave() {
@@ -58,7 +56,6 @@ Card.propTypes = {
     preview: PropTypes.string.isRequired,
     title: PropTypes.string.isRequired,
   }).isRequired,
-  onHover: PropTypes.func.isRequired,
   onClick: PropTypes.func.isRequired,
 };
 
