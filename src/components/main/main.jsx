@@ -2,9 +2,10 @@ import React from 'react';
 import PropTypes from 'prop-types';
 import FilmList from '../film-list/film-list.jsx';
 import GenreList from '../genre-list/genre-list.jsx';
+import ShowMoreButton from '../show-more-btn/show-more-btn';
 
 const Main = (props) => {
-  const {mainMovie, movieList, genres, activeGenre, onGenreClick, onCardClick} = props;
+  const {mainMovie, movieList, genres, activeGenre, onGenreClick, onCardClick, onShowMoreClick, shown} = props;
   return <>
       <section className="movie-card">
         <div className="movie-card__bg">
@@ -65,11 +66,8 @@ const Main = (props) => {
       <section className="catalog">
         <h2 className="catalog__title visually-hidden">Catalog</h2>
         <GenreList genres={genres} activeGenre={activeGenre} onGenreClick={onGenreClick}/>
-        <FilmList films={movieList} onCardClick={onCardClick} />
-
-        <div className="catalog__more">
-          <button className="catalog__button" type="button">Show more</button>
-        </div>
+        <FilmList films={movieList.slice(0, shown)} onCardClick={onCardClick} />
+        {movieList.length > shown ? <ShowMoreButton onShowMoreClick={onShowMoreClick} /> : ``}
       </section>
 
       <footer className="page-footer">
@@ -103,6 +101,8 @@ Main.propTypes = {
   genres: PropTypes.array.isRequired,
   activeGenre: PropTypes.string.isRequired,
   onGenreClick: PropTypes.func.isRequired,
+  onShowMoreClick: PropTypes.func.isRequired,
+  shown: PropTypes.number.isRequired,
 };
 
 export default Main;

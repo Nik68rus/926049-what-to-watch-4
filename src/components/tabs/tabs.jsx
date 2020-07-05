@@ -41,7 +41,8 @@ export default class Tabs extends PureComponent {
             {Object.values(TabCodes).map((tabName) => (
               <li className={`movie-nav__item ${tabName.toLowerCase() === this.state.activeTab ? `movie-nav__item--active` : ``}`}
                 key={tabName}
-                onClick={() => {
+                onClick={(evt) => {
+                  evt.preventDefault();
                   this._handleTabClick(tabName);
                 }}
               >

@@ -6,31 +6,33 @@ import MoviePage from '../movie-page/movie-page.jsx';
 import {connect} from 'react-redux';
 import {ActionCreator} from '../../store/reducer';
 
-
 class App extends PureComponent {
   constructor(props) {
     super(props);
-    this.state = {
-      activeID: -1,
-    };
   }
 
   _renderApp() {
-    const {movie, movies, genres, activeGenre, onGenreClick} = this.props;
-    const {activeID} = this.state;
-    if (activeID === -1) {
-      return <Main mainMovie={movie} movieList={movies} genres={genres} activeGenre={activeGenre} onGenreClick={onGenreClick} onCardClick={(id) => {
-        this.setState((prevState) => ({prevState, activeID: id}));
-      }}/>;
+    const {movie, activeMovie, movies, shown, genres, activeGenre, onGenreClick, onShowMoreClick, onCardClick} = this.props;
+    if (activeMovie === `none`) {
+      return <Main
+        mainMovie={movie}
+        movieList={movies}
+        genres={genres}
+        activeGenre={activeGenre}
+        onGenreClick={onGenreClick}
+        onShowMoreClick={onShowMoreClick}
+        onCardClick={onCardClick}
+        shown={shown}
+      />;
     } else {
-      const choosenMovie = movies.find((item) => item.id === this.state.activeID);
+      const choosenMovie = movies.find((item) => item.id === activeMovie);
       const similarMovies = movies.filter((item) => item.genre === choosenMovie.genre).slice(0, 4);
-      return <MoviePage movie={choosenMovie} similarMovies={similarMovies}/>;
+      return <MoviePage movie={choosenMovie} similarMovies={similarMovies} onCardClick={onCardClick}/>;
     }
   }
 
   render() {
-    const {movie} = this.props;
+    const {movie, movies, onCardClick} = this.props;
     return (
       <BrowserRouter>
         <Switch>
@@ -38,7 +40,7 @@ class App extends PureComponent {
             {this._renderApp()}
           </Route>
           <Route exact path="/dev-film">
-            <MoviePage movie={movie} />
+            <MoviePage movie={movie} similarMovies={movies.slice(0, 4)} onCardClick={onCardClick}/>
           </Route>
         </Switch>
       </BrowserRouter>
@@ -58,19 +60,35 @@ App.propTypes = {
   genres: PropTypes.array.isRequired,
   activeGenre: PropTypes.string.isRequired,
   onGenreClick: PropTypes.func.isRequired,
+  onShowMoreClick: PropTypes.func.isRequired,
+  onCardClick: PropTypes.func.isRequired,
+  activeMovie: PropTypes.string.isRequired,
+  shown: PropTypes.number.isRequired,
 };
 
 const mapStateToProps = (state) => ({
   movie: state.films[0],
-  movies: state.genre === `All genres` ? state.films : state.films.filter((film) => film.genre === state.genre),
+  activeMovie: state.activeMovie,
+  movies: state.cards,
   activeGenre: state.genre,
   genres: [`All genres`, ...new Set(state.films.map((movie) => movie.genre))],
+  shown: state.cardsToShow,
 });
 
 const mapDispatchToProps = (dispatch) => ({
   onGenreClick(genre) {
     dispatch(ActionCreator.changeGenre(genre));
-  }});
+    dispatch(ActionCreator.getList(genre));
+  },
+
+  onShowMoreClick() {
+    dispatch(ActionCreator.showMore());
+  },
+
+  onCardClick(id) {
+    dispatch(ActionCreator.showDetails(id));
+  }
+});
 
 export {App};
 export default connect(mapStateToProps, mapDispatchToProps)(App);
