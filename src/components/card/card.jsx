@@ -1,53 +1,35 @@
-import React, {PureComponent} from 'react';
+import React from 'react';
 import PropTypes from 'prop-types';
-import VideoPlayer from '../video-player/video-player.jsx';
+import Player from '../video-player/video-player.jsx';
+import withVideo from '../../hocs/with-video/with-video';
 
+const VideoPlayer = withVideo(Player);
 
-class Card extends PureComponent {
-  constructor(props) {
-    super(props);
+const Card = (props) => {
+  const {movie, onClick, isPlaying, onMouseEnter, onMouseLeave} = props;
+  const {preview, title, src} = movie;
 
-    this.state = {
-      isPlaying: false,
-    };
-
-    this._handleMouseEnter = this._handleMouseEnter.bind(this);
-    this._handleMouseLeave = this._handleMouseLeave.bind(this);
-  }
-
-  _handleMouseEnter() {
-    this.setState((prevState) => ({prevState, isPlaying: true}));
-  }
-
-  _handleMouseLeave() {
-    this.setState((prevState) => ({prevState, isPlaying: false}));
-  }
-
-  render() {
-    const {movie, onClick} = this.props;
-    const {preview, title, src} = movie;
-    return (
-      <article
-        className="small-movie-card catalog__movies-card"
-        onMouseEnter={this._handleMouseEnter}
-        onMouseLeave={this._handleMouseLeave}
-        onClick={() => onClick(movie.id)}
-      >
-        <div className="small-movie-card__image">
-          <VideoPlayer
-            isPlaying={this.state.isPlaying}
-            src={src}
-            poster={preview}
-          />
-          <img src={preview} alt={title} width="280" height="175" />
-        </div>
-        <h3 className="small-movie-card__title">
-          <a className="small-movie-card__link" href="movie-page.html">{title}</a>
-        </h3>
-      </article>
-    );
-  }
-}
+  return (
+    <article
+      className="small-movie-card catalog__movies-card"
+      onMouseEnter={onMouseEnter}
+      onMouseLeave={onMouseLeave}
+      onClick={() => onClick(movie.id)}
+    >
+      <div className="small-movie-card__image">
+        <VideoPlayer
+          isPlaying={isPlaying}
+          src={src}
+          poster={preview}
+        />
+        <img src={preview} alt={title} width="280" height="175" />
+      </div>
+      <h3 className="small-movie-card__title">
+        <a className="small-movie-card__link" href="movie-page.html">{title}</a>
+      </h3>
+    </article>
+  );
+};
 
 Card.propTypes = {
   movie: PropTypes.shape({
@@ -57,6 +39,9 @@ Card.propTypes = {
     title: PropTypes.string.isRequired,
   }).isRequired,
   onClick: PropTypes.func.isRequired,
+  onMouseEnter: PropTypes.func.isRequired,
+  onMouseLeave: PropTypes.func.isRequired,
+  isPlaying: PropTypes.bool.isRequired,
 };
 
 export default Card;

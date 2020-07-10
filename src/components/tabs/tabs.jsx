@@ -9,14 +9,6 @@ import comments from '../../mocks/comments';
 export default class Tabs extends PureComponent {
   constructor(props) {
     super(props);
-    this.state = {
-      activeTab: TabCodes.OVERVIEW.toLowerCase(),
-    };
-    this._handleTabClick = this._handleTabClick.bind(this);
-  }
-
-  _handleTabClick(name) {
-    this.setState((prevState) => ({prevState, activeTab: name.toLowerCase()}));
   }
 
   _renderTab(tab) {
@@ -33,17 +25,17 @@ export default class Tabs extends PureComponent {
   }
 
   render() {
-    const {activeTab} = this.state;
+    const {activeTab, onTabClick} = this.props;
     return (
       <div className="movie-card__desc">
         <nav className="movie-nav movie-card__nav">
           <ul className="movie-nav__list">
             {Object.values(TabCodes).map((tabName) => (
-              <li className={`movie-nav__item ${tabName.toLowerCase() === this.state.activeTab ? `movie-nav__item--active` : ``}`}
+              <li className={`movie-nav__item ${tabName.toLowerCase() === activeTab ? `movie-nav__item--active` : ``}`}
                 key={tabName}
                 onClick={(evt) => {
                   evt.preventDefault();
-                  this._handleTabClick(tabName);
+                  onTabClick(tabName);
                 }}
               >
                 <a href="#" className="movie-nav__link">{tabName}</a>
@@ -62,4 +54,6 @@ export default class Tabs extends PureComponent {
 
 Tabs.propTypes = {
   movie: PropTypes.shape({}).isRequired,
+  activeTab: PropTypes.string.isRequired,
+  onTabClick: PropTypes.func.isRequired,
 };
