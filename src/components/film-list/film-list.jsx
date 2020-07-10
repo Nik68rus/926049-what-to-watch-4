@@ -1,13 +1,16 @@
 import React from 'react';
 import PropTypes from 'prop-types';
 import Card from '../card/card.jsx';
+import withPlayStatus from '../../hocs/with-play-status/with-play-status';
+
+const CardWrapped = withPlayStatus(Card);
 
 const FilmList = (props) => {
   const {films, onCardClick} = props;
   return (
     <div className="catalog__movies-list">
       {films.map((movie) => (
-        <Card key={movie.id} movie={movie} onClick={onCardClick}/>
+        <CardWrapped key={movie.id} movie={movie} onClick={onCardClick} />
       ))}
     </div>
   );

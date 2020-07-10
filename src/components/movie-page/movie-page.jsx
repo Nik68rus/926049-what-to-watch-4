@@ -2,6 +2,9 @@ import React, {Fragment} from 'react';
 import PropTypes from 'prop-types';
 import Tabs from '../tabs/tabs.jsx';
 import FilmList from '../film-list/film-list.jsx';
+import withActiveTab from '../../hocs/with-active-tab/with-active-tab';
+
+const TabsWraaped = withActiveTab(Tabs);
 
 const MoviePage = (props) => {
   const {movie, onCardClick, similarMovies} = props;
@@ -65,7 +68,7 @@ const MoviePage = (props) => {
               <img src={poster} alt="The Grand Budapest Hotel poster" width="218" height="327" />
             </div>
 
-            <Tabs movie={movie} />
+            <TabsWraaped movie={movie} />
 
           </div>
         </div>
