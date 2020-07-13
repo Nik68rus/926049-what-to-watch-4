@@ -5,7 +5,7 @@ import GenreList from '../genre-list/genre-list.jsx';
 import ShowMoreButton from '../show-more-btn/show-more-btn';
 
 const Main = (props) => {
-  const {mainMovie, movieList, genres, activeGenre, onGenreClick, onCardClick, onShowMoreClick, shown} = props;
+  const {mainMovie, movieList, genres, activeGenre, onGenreClick, onCardClick, onShowMoreClick, shown, onPlayMovieClick, isMoviePlaying} = props;
   return <>
       <section className="movie-card">
         <div className="movie-card__bg">
@@ -44,7 +44,7 @@ const Main = (props) => {
               </p>
 
               <div className="movie-card__buttons">
-                <button className="btn btn--play movie-card__button" type="button">
+                <button className="btn btn--play movie-card__button" type="button" onClick={() => onPlayMovieClick(isMoviePlaying)}>
                   <svg viewBox="0 0 19 19" width="19" height="19">
                     <use xlinkHref="#play-s"></use>
                   </svg>
@@ -102,7 +102,9 @@ Main.propTypes = {
   activeGenre: PropTypes.string.isRequired,
   onGenreClick: PropTypes.func.isRequired,
   onShowMoreClick: PropTypes.func.isRequired,
+  onPlayMovieClick: PropTypes.func.isRequired,
   shown: PropTypes.number.isRequired,
+  isMoviePlaying: PropTypes.bool.isRequired,
 };
 
 export default Main;

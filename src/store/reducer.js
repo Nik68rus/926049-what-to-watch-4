@@ -8,6 +8,7 @@ const initialState = {
   films,
   cards: films,
   cardsToShow: CARDS_BATCH,
+  isMoviePlaying: false,
 };
 
 const getMovies = (genre) => {
@@ -19,6 +20,7 @@ const ActionType = {
   GET_LIST: `GET_LIST`,
   SHOW_MORE: `SHOW_MORE`,
   SHOW_DETAILS: `SHOW_DETAILS`,
+  CHANGE_PLAY_STATUS: `CHANGE_PLAY_STATUS`,
 };
 
 const ActionCreator = {
@@ -38,6 +40,10 @@ const ActionCreator = {
     type: ActionType.SHOW_DETAILS,
     payload: id,
   }),
+  playMovie: (status) => ({
+    type: ActionType.CHANGE_PLAY_STATUS,
+    payload: !status,
+  })
 };
 
 const reducer = (state = initialState, action) => {
@@ -50,6 +56,8 @@ const reducer = (state = initialState, action) => {
       return extend(state, {cardsToShow: state.cardsToShow + action.payload});
     case ActionType.SHOW_DETAILS:
       return extend(state, {activeMovie: action.payload});
+    case ActionType.CHANGE_PLAY_STATUS:
+      return extend(state, {isMoviePlaying: action.payload});
   }
   return state;
 };
