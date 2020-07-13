@@ -5,6 +5,7 @@ import {Switch, Route, BrowserRouter} from "react-router-dom";
 import MoviePage from '../movie-page/movie-page.jsx';
 import {connect} from 'react-redux';
 import {ActionCreator} from '../../store/reducer';
+import FullScreenPlayer from '../full-screen-player/full-screen-player.jsx';
 
 class App extends PureComponent {
   constructor(props) {
@@ -12,7 +13,14 @@ class App extends PureComponent {
   }
 
   _renderApp() {
-    const {movie, activeMovie, movies, shown, genres, activeGenre, onGenreClick, onShowMoreClick, onCardClick} = this.props;
+    const {movie, activeMovie, movies, shown, genres, activeGenre, onGenreClick, onShowMoreClick, onCardClick, isMoviePlaying, onPlayMovieClick} = this.props;
+    const currentMovie = activeMovie === `none` ? movies[0] : movies.find((item) => item.id === activeMovie);
+    if (isMoviePlaying) {
+      return (
+        <FullScreenPlayer title= {currentMovie.title} src={currentMovie.src} poster={currentMovie.preview} onExitClick={onPlayMovieClick} isMoviePlaying={isMoviePlaying}/>
+      );
+    }
+
     if (activeMovie === `none`) {
       return <Main
         mainMovie={movie}
@@ -23,16 +31,18 @@ class App extends PureComponent {
         onShowMoreClick={onShowMoreClick}
         onCardClick={onCardClick}
         shown={shown}
+        onPlayMovieClick={onPlayMovieClick}
+        isMoviePlaying={isMoviePlaying}
       />;
     } else {
       const choosenMovie = movies.find((item) => item.id === activeMovie);
       const similarMovies = movies.filter((item) => item.genre === choosenMovie.genre).slice(0, 4);
-      return <MoviePage movie={choosenMovie} similarMovies={similarMovies} onCardClick={onCardClick}/>;
+      return <MoviePage movie={choosenMovie} similarMovies={similarMovies} onCardClick={onCardClick} onPlayMovieClick={onPlayMovieClick}/>;
     }
   }
 
   render() {
-    const {movie, movies, onCardClick} = this.props;
+    const {movie, movies, onCardClick, onPlayMovieClick} = this.props;
     return (
       <BrowserRouter>
         <Switch>
@@ -40,7 +50,7 @@ class App extends PureComponent {
             {this._renderApp()}
           </Route>
           <Route exact path="/dev-film">
-            <MoviePage movie={movie} similarMovies={movies.slice(0, 4)} onCardClick={onCardClick}/>
+            <MoviePage movie={movie} similarMovies={movies.slice(0, 4)} onCardClick={onCardClick} onPlayMovieClick={onPlayMovieClick}/>
           </Route>
         </Switch>
       </BrowserRouter>
@@ -55,6 +65,8 @@ App.propTypes = {
     title: PropTypes.string.isRequired,
     genre: PropTypes.string.isRequired,
     date: PropTypes.string.isRequired,
+    src: PropTypes.string.isRequired,
+    poster: PropTypes.string.isRequired,
   }).isRequired,
   movies: PropTypes.array.isRequired,
   genres: PropTypes.array.isRequired,
@@ -64,11 +76,14 @@ App.propTypes = {
   onCardClick: PropTypes.func.isRequired,
   activeMovie: PropTypes.string.isRequired,
   shown: PropTypes.number.isRequired,
+  isMoviePlaying: PropTypes.bool.isRequired,
+  onPlayMovieClick: PropTypes.func.isRequired,
 };
 
 const mapStateToProps = (state) => ({
   movie: state.films[0],
   activeMovie: state.activeMovie,
+  isMoviePlaying: state.isMoviePlaying,
   movies: state.cards,
   activeGenre: state.genre,
   genres: [`All genres`, ...new Set(state.films.map((movie) => movie.genre))],
@@ -87,6 +102,10 @@ const mapDispatchToProps = (dispatch) => ({
 
   onCardClick(id) {
     dispatch(ActionCreator.showDetails(id));
+  },
+
+  onPlayMovieClick(status) {
+    dispatch(ActionCreator.playMovie(status));
   }
 });
 
