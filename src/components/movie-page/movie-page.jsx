@@ -8,10 +8,10 @@ const TabsWraaped = withActiveTab(Tabs);
 
 const MoviePage = (props) => {
   const {movie, onCardClick, similarMovies, onPlayMovieClick} = props;
-  const {title, poster, background, genre, date} = movie;
+  const {title, poster, background, backgroundColor, genre, date} = movie;
   return (
     <Fragment>
-      <section className="movie-card movie-card--full">
+      <section className="movie-card movie-card--full" style={{backgroundColor}}>
         <div className="movie-card__hero">
           <div className="movie-card__bg">
             <img src={background} alt={title} />

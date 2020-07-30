@@ -1,14 +1,29 @@
 import React from 'react';
 import ReactDOM from 'react-dom';
 import App from './components/app/app.jsx';
-import {createStore} from 'redux';
+import {createStore, applyMiddleware} from 'redux';
 import {Provider} from 'react-redux';
-import {reducer} from './store/reducer';
+import reducer from './reducer/reducer';
+import {Operation} from './reducer/data/data';
+import thunk from 'redux-thunk';
+import {createAPI} from './api';
+import {composeWithDevTools} from 'redux-devtools-extension';
+
+const onUnauthorized = () => {
+
+};
+
+const api = createAPI(onUnauthorized);
 
 const store = createStore(
     reducer,
-    window.__REDUX_DEVTOOLS_EXTENSION__ ? window.__REDUX_DEVTOOLS_EXTENSION__() : (f) => f
+    composeWithDevTools(
+        applyMiddleware(thunk.withExtraArgument(api))
+    )
 );
+
+store.dispatch(Operation.loadMovies());
+store.dispatch(Operation.getPromo());
 
 ReactDOM.render(
     <Provider store={store}>

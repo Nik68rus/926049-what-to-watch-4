@@ -33,7 +33,7 @@ const Card = (props) => {
 
 Card.propTypes = {
   movie: PropTypes.shape({
-    id: PropTypes.string.isRequired,
+    id: PropTypes.number.isRequired,
     src: PropTypes.string.isRequired,
     preview: PropTypes.string.isRequired,
     title: PropTypes.string.isRequired,

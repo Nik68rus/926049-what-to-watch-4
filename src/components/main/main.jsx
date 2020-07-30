@@ -9,7 +9,7 @@ const Main = (props) => {
   return <>
       <section className="movie-card">
         <div className="movie-card__bg">
-          <img src="img/bg-the-grand-budapest-hotel.jpg" alt={`"` + mainMovie.title + `"`} />
+          <img src={mainMovie.background} alt={`"` + mainMovie.title + `"`} />
         </div>
 
         <h1 className="visually-hidden">WTW</h1>
@@ -33,7 +33,7 @@ const Main = (props) => {
         <div className="movie-card__wrap">
           <div className="movie-card__info">
             <div className="movie-card__poster">
-              <img src="img/the-grand-budapest-hotel-poster.jpg" alt={`"` + mainMovie.title + `"`} width="218" height="327" />
+              <img src={mainMovie.preview} alt={`"` + mainMovie.title + `"`} width="218" height="327" />
             </div>
 
             <div className="movie-card__desc">
@@ -90,11 +90,11 @@ const Main = (props) => {
 
 Main.propTypes = {
   mainMovie: PropTypes.shape({
-    id: PropTypes.string.isRequired,
+    id: PropTypes.number.isRequired,
     preview: PropTypes.string.isRequired,
     title: PropTypes.string.isRequired,
     genre: PropTypes.string.isRequired,
-    date: PropTypes.string.isRequired,
+    date: PropTypes.number.isRequired,
   }).isRequired,
   movieList: PropTypes.array.isRequired,
   onCardClick: PropTypes.func.isRequired,

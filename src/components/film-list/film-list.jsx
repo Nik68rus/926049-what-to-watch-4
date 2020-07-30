@@ -18,7 +18,7 @@ const FilmList = (props) => {
 
 FilmList.propTypes = {
   films: PropTypes.arrayOf(PropTypes.shape({
-    id: PropTypes.string.isRequired,
+    id: PropTypes.number.isRequired,
     preview: PropTypes.string.isRequired,
     title: PropTypes.string.isRequired,
   })).isRequired,
