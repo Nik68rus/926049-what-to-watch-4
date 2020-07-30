@@ -1,18 +1,13 @@
-import {extend} from '../utils';
-import films from '../mocks/films';
+import {extend} from '../../utils';
+
 const CARDS_BATCH = 8;
 
 const initialState = {
   genre: `All genres`,
-  activeMovie: `none`,
-  films,
-  cards: films,
+  activeMovie: 0,
+  cards: [],
   cardsToShow: CARDS_BATCH,
   isMoviePlaying: false,
-};
-
-const getMovies = (genre) => {
-  return genre === `All genres` ? films : films.filter((item) => item.genre === genre);
 };
 
 const ActionType = {
@@ -28,9 +23,9 @@ const ActionCreator = {
     type: ActionType.CHANGE_GENRE,
     payload: genre,
   }),
-  getList: (movies, genre) => ({
+  getList: (genre) => ({
     type: ActionType.GET_LIST,
-    payload: getMovies(movies, genre),
+    payload: genre,
   }),
   showMore: () => ({
     type: ActionType.SHOW_MORE,

@@ -4,8 +4,10 @@ import PropTypes from 'prop-types';
 import {Switch, Route, BrowserRouter} from "react-router-dom";
 import MoviePage from '../movie-page/movie-page.jsx';
 import {connect} from 'react-redux';
-import {ActionCreator} from '../../store/reducer';
+import {ActionCreator} from '../../reducer/application/application';
 import FullScreenPlayer from '../full-screen-player/full-screen-player.jsx';
+import {getUniqueGenres, getPromoMovie, getGenreMovies} from '../../reducer/data/selectors';
+import {getGenre, getActiveMovie, getPlayingStatus, getCardsToShow} from '../../reducer/application/selectors';
 
 class App extends PureComponent {
   constructor(props) {
@@ -14,14 +16,14 @@ class App extends PureComponent {
 
   _renderApp() {
     const {movie, activeMovie, movies, shown, genres, activeGenre, onGenreClick, onShowMoreClick, onCardClick, isMoviePlaying, onPlayMovieClick} = this.props;
-    const currentMovie = activeMovie === `none` ? movies[0] : movies.find((item) => item.id === activeMovie);
+    const currentMovie = activeMovie === 0 ? {} : movies.find((item) => item.id === activeMovie);
     if (isMoviePlaying) {
       return (
         <FullScreenPlayer title= {currentMovie.title} src={currentMovie.src} poster={currentMovie.preview} onExitClick={onPlayMovieClick} isMoviePlaying={isMoviePlaying}/>
       );
     }
 
-    if (activeMovie === `none`) {
+    if (activeMovie === 0) {
       return <Main
         mainMovie={movie}
         movieList={movies}
@@ -42,15 +44,11 @@ class App extends PureComponent {
   }
 
   render() {
-    const {movie, movies, onCardClick, onPlayMovieClick} = this.props;
     return (
       <BrowserRouter>
         <Switch>
           <Route exact path="/">
             {this._renderApp()}
-          </Route>
-          <Route exact path="/dev-film">
-            <MoviePage movie={movie} similarMovies={movies.slice(0, 4)} onCardClick={onCardClick} onPlayMovieClick={onPlayMovieClick}/>
           </Route>
         </Switch>
       </BrowserRouter>
@@ -60,11 +58,11 @@ class App extends PureComponent {
 
 App.propTypes = {
   movie: PropTypes.shape({
-    id: PropTypes.string.isRequired,
+    id: PropTypes.number.isRequired,
     preview: PropTypes.string.isRequired,
     title: PropTypes.string.isRequired,
     genre: PropTypes.string.isRequired,
-    date: PropTypes.string.isRequired,
+    date: PropTypes.number.isRequired,
     src: PropTypes.string.isRequired,
     poster: PropTypes.string.isRequired,
   }).isRequired,
@@ -74,20 +72,20 @@ App.propTypes = {
   onGenreClick: PropTypes.func.isRequired,
   onShowMoreClick: PropTypes.func.isRequired,
   onCardClick: PropTypes.func.isRequired,
-  activeMovie: PropTypes.string.isRequired,
+  activeMovie: PropTypes.number.isRequired,
   shown: PropTypes.number.isRequired,
   isMoviePlaying: PropTypes.bool.isRequired,
   onPlayMovieClick: PropTypes.func.isRequired,
 };
 
 const mapStateToProps = (state) => ({
-  movie: state.films[0],
-  activeMovie: state.activeMovie,
-  isMoviePlaying: state.isMoviePlaying,
-  movies: state.cards,
-  activeGenre: state.genre,
-  genres: [`All genres`, ...new Set(state.films.map((movie) => movie.genre))],
-  shown: state.cardsToShow,
+  movie: getPromoMovie(state),
+  activeMovie: getActiveMovie(state),
+  isMoviePlaying: getPlayingStatus(state),
+  movies: getGenreMovies(state),
+  activeGenre: getGenre(state),
+  genres: getUniqueGenres(state),
+  shown: getCardsToShow(state),
 });
 
 const mapDispatchToProps = (dispatch) => ({
