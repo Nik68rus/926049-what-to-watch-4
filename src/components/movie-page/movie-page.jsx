@@ -3,11 +3,12 @@ import PropTypes from 'prop-types';
 import Tabs from '../tabs/tabs.jsx';
 import FilmList from '../film-list/film-list.jsx';
 import withActiveTab from '../../hocs/with-active-tab/with-active-tab';
+import UserBlock from '../user-block/user-block.js';
 
 const TabsWraaped = withActiveTab(Tabs);
 
 const MoviePage = (props) => {
-  const {movie, onCardClick, similarMovies, onPlayMovieClick} = props;
+  const {movie, onCardClick, similarMovies, onPlayMovieClick, authorizationStatus} = props;
   const {title, poster, background, backgroundColor, genre, date} = movie;
   return (
     <Fragment>
@@ -28,11 +29,8 @@ const MoviePage = (props) => {
               </a>
             </div>
 
-            <div className="user-block">
-              <div className="user-block__avatar">
-                <img src="img/avatar.jpg" alt="User avatar" width="63" height="63" />
-              </div>
-            </div>
+            <UserBlock authorizationStatus={authorizationStatus} />
+
           </header>
 
           <div className="movie-card__wrap">
@@ -103,6 +101,7 @@ MoviePage.propTypes = {
   similarMovies: PropTypes.array.isRequired,
   onCardClick: PropTypes.func.isRequired,
   onPlayMovieClick: PropTypes.func.isRequired,
+  authorizationStatus: PropTypes.string.isRequired,
 };
 
 export default MoviePage;

@@ -8,6 +8,9 @@ import {ActionCreator} from '../../reducer/application/application';
 import FullScreenPlayer from '../full-screen-player/full-screen-player.jsx';
 import {getUniqueGenres, getPromoMovie, getGenreMovies} from '../../reducer/data/selectors';
 import {getGenre, getActiveMovie, getPlayingStatus, getCardsToShow} from '../../reducer/application/selectors';
+import SignIn from '../sign-in/sign-in.jsx';
+import {getAuthStatus} from '../../reducer/user/selectors';
+import {Operation as UserOperation, ActionCreator as UserActionCreator, AuthorizationStatus} from '../../reducer/user/user';
 
 class App extends PureComponent {
   constructor(props) {
@@ -15,7 +18,7 @@ class App extends PureComponent {
   }
 
   _renderApp() {
-    const {movie, activeMovie, movies, shown, genres, activeGenre, onGenreClick, onShowMoreClick, onCardClick, isMoviePlaying, onPlayMovieClick} = this.props;
+    const {movie, activeMovie, movies, shown, genres, activeGenre, onGenreClick, onShowMoreClick, onCardClick, isMoviePlaying, onPlayMovieClick, authorizationStatus} = this.props;
     const currentMovie = activeMovie === 0 ? {} : movies.find((item) => item.id === activeMovie);
     if (isMoviePlaying) {
       return (
@@ -35,11 +38,12 @@ class App extends PureComponent {
         shown={shown}
         onPlayMovieClick={onPlayMovieClick}
         isMoviePlaying={isMoviePlaying}
+        authorizationStatus={authorizationStatus}
       />;
     } else {
       const choosenMovie = movies.find((item) => item.id === activeMovie);
       const similarMovies = movies.filter((item) => item.genre === choosenMovie.genre).slice(0, 4);
-      return <MoviePage movie={choosenMovie} similarMovies={similarMovies} onCardClick={onCardClick} onPlayMovieClick={onPlayMovieClick}/>;
+      return <MoviePage movie={choosenMovie} similarMovies={similarMovies} onCardClick={onCardClick} onPlayMovieClick={onPlayMovieClick} authorizationStatus={authorizationStatus}/>;
     }
   }
 
@@ -50,6 +54,10 @@ class App extends PureComponent {
           <Route exact path="/">
             {this._renderApp()}
           </Route>
+          <Route exact path="/dev-signin">
+            <SignIn onSubmit={this.props.onLogin}/>
+          </Route>
+
         </Switch>
       </BrowserRouter>
     );
@@ -76,6 +84,8 @@ App.propTypes = {
   shown: PropTypes.number.isRequired,
   isMoviePlaying: PropTypes.bool.isRequired,
   onPlayMovieClick: PropTypes.func.isRequired,
+  authorizationStatus: PropTypes.string.isRequired,
+  onLogin: PropTypes.func.isRequired,
 };
 
 const mapStateToProps = (state) => ({
@@ -86,6 +96,7 @@ const mapStateToProps = (state) => ({
   activeGenre: getGenre(state),
   genres: getUniqueGenres(state),
   shown: getCardsToShow(state),
+  authorizationStatus: getAuthStatus(state),
 });
 
 const mapDispatchToProps = (dispatch) => ({
@@ -104,6 +115,11 @@ const mapDispatchToProps = (dispatch) => ({
 
   onPlayMovieClick(status) {
     dispatch(ActionCreator.playMovie(status));
+  },
+
+  onLogin(authData) {
+    dispatch(UserOperation.login(authData));
+    dispatch(UserActionCreator.requireAuthorization(AuthorizationStatus.AUTH));
   }
 });
 
