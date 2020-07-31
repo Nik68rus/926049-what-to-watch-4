@@ -3,9 +3,11 @@ import PropTypes from 'prop-types';
 import FilmList from '../film-list/film-list.jsx';
 import GenreList from '../genre-list/genre-list.jsx';
 import ShowMoreButton from '../show-more-btn/show-more-btn';
+import {AuthorizationStatus} from '../../reducer/user/user.js';
+import UserBlock from '../user-block/user-block';
 
 const Main = (props) => {
-  const {mainMovie, movieList, genres, activeGenre, onGenreClick, onCardClick, onShowMoreClick, shown, onPlayMovieClick, isMoviePlaying} = props;
+  const {mainMovie, movieList, genres, activeGenre, onGenreClick, onCardClick, onShowMoreClick, shown, onPlayMovieClick, isMoviePlaying, authorizationStatus} = props;
   return <>
       <section className="movie-card">
         <div className="movie-card__bg">
@@ -23,11 +25,8 @@ const Main = (props) => {
             </a>
           </div>
 
-          <div className="user-block">
-            <div className="user-block__avatar">
-              <img src="img/avatar.jpg" alt="User avatar" width="63" height="63" />
-            </div>
-          </div>
+          <UserBlock authorizationStatus={authorizationStatus} />
+
         </header>
 
         <div className="movie-card__wrap">
@@ -95,6 +94,7 @@ Main.propTypes = {
     title: PropTypes.string.isRequired,
     genre: PropTypes.string.isRequired,
     date: PropTypes.number.isRequired,
+    background: PropTypes.string.isRequired,
   }).isRequired,
   movieList: PropTypes.array.isRequired,
   onCardClick: PropTypes.func.isRequired,
@@ -105,6 +105,7 @@ Main.propTypes = {
   onPlayMovieClick: PropTypes.func.isRequired,
   shown: PropTypes.number.isRequired,
   isMoviePlaying: PropTypes.bool.isRequired,
+  authorizationStatus: PropTypes.string.isRequired,
 };
 
 export default Main;
