@@ -6,11 +6,13 @@ import MoviePage from '../movie-page/movie-page.jsx';
 import {connect} from 'react-redux';
 import {ActionCreator} from '../../reducer/application/application';
 import FullScreenPlayer from '../full-screen-player/full-screen-player.jsx';
-import {getUniqueGenres, getPromoMovie, getGenreMovies} from '../../reducer/data/selectors';
+import {getUniqueGenres, getPromoMovie, getGenreMovies, getComments} from '../../reducer/data/selectors';
 import {getGenre, getActiveMovie, getPlayingStatus, getCardsToShow} from '../../reducer/application/selectors';
 import SignIn from '../sign-in/sign-in.jsx';
 import {getAuthStatus} from '../../reducer/user/selectors';
 import {Operation as UserOperation, ActionCreator as UserActionCreator, AuthorizationStatus} from '../../reducer/user/user';
+import {Operation as DataOperation} from '../../reducer/data/data';
+import NewReview from '../new-review/new-review';
 
 class App extends PureComponent {
   constructor(props) {
@@ -18,8 +20,8 @@ class App extends PureComponent {
   }
 
   _renderApp() {
-    const {movie, activeMovie, movies, shown, genres, activeGenre, onGenreClick, onShowMoreClick, onCardClick, isMoviePlaying, onPlayMovieClick, authorizationStatus} = this.props;
-    const currentMovie = activeMovie === 0 ? {} : movies.find((item) => item.id === activeMovie);
+    const {movie, activeMovie, movies, shown, genres, activeGenre, onGenreClick, onShowMoreClick, onCardClick, isMoviePlaying, onPlayMovieClick, authorizationStatus, comments} = this.props;
+    const currentMovie = activeMovie === 0 ? movie : movies.find((item) => item.id === activeMovie);
     if (isMoviePlaying) {
       return (
         <FullScreenPlayer title= {currentMovie.title} src={currentMovie.src} poster={currentMovie.preview} onExitClick={onPlayMovieClick} isMoviePlaying={isMoviePlaying}/>
@@ -43,11 +45,19 @@ class App extends PureComponent {
     } else {
       const choosenMovie = movies.find((item) => item.id === activeMovie);
       const similarMovies = movies.filter((item) => item.genre === choosenMovie.genre).slice(0, 4);
-      return <MoviePage movie={choosenMovie} similarMovies={similarMovies} onCardClick={onCardClick} onPlayMovieClick={onPlayMovieClick} authorizationStatus={authorizationStatus}/>;
+      return <MoviePage
+        movie={choosenMovie}
+        similarMovies={similarMovies}
+        onCardClick={onCardClick}
+        onPlayMovieClick={onPlayMovieClick}
+        authorizationStatus={authorizationStatus}
+        comments={comments}
+      />;
     }
   }
 
   render() {
+    const {movie, onCommentPost} = this.props;
     return (
       <BrowserRouter>
         <Switch>
@@ -56,6 +66,11 @@ class App extends PureComponent {
           </Route>
           <Route exact path="/dev-signin">
             <SignIn onSubmit={this.props.onLogin}/>
+          </Route>
+          <Route exact path="/dev-review">
+            <NewReview onSubmit={onCommentPost}
+              movie={movie}
+            />
           </Route>
 
         </Switch>
@@ -97,6 +112,7 @@ const mapStateToProps = (state) => ({
   genres: getUniqueGenres(state),
   shown: getCardsToShow(state),
   authorizationStatus: getAuthStatus(state),
+  comments: getComments(state),
 });
 
 const mapDispatchToProps = (dispatch) => ({
@@ -111,6 +127,7 @@ const mapDispatchToProps = (dispatch) => ({
 
   onCardClick(id) {
     dispatch(ActionCreator.showDetails(id));
+    dispatch(DataOperation.loadComments(id));
   },
 
   onPlayMovieClick(status) {
@@ -120,6 +137,10 @@ const mapDispatchToProps = (dispatch) => ({
   onLogin(authData) {
     dispatch(UserOperation.login(authData));
     dispatch(UserActionCreator.requireAuthorization(AuthorizationStatus.AUTH));
+  },
+
+  onCommentPost(comment, id) {
+    dispatch(DataOperation.postComment(comment, id));
   }
 });
 
