@@ -1,14 +1,27 @@
-import React, {PureComponent} from 'react';
+import React, {PureComponent, createRef} from 'react';
 import PropTypes from 'prop-types';
 import UserBlock from '../user-block/user-block';
 
 class NewReview extends PureComponent {
   constructor(props) {
     super(props);
+    this.formRef = createRef();
+    this.commentRef = createRef();
+
+    this.handleSubmit = this.handleSubmit.bind(this);
+  }
+
+  handleSubmit(evt) {
+    const {onSubmit, movie} = this.props;
+    evt.preventDefault();
+    onSubmit({
+      rating: this.formRef.current.rating.value,
+      comment: this.commentRef.current.value,
+    }, movie.id);
   }
 
   render() {
-    const {movie, onSubmit, authorizationStatus} = this.props;
+    const {movie, authorizationStatus} = this.props;
     const {background, title, backgroundColor, poster} = movie;
 
     return (
@@ -50,12 +63,10 @@ class NewReview extends PureComponent {
         </div>
 
         <div className="add-review">
-          <form action="#" className="add-review__form" onSubmit={() => {
-            onSubmit({rating: 1, comment: `kkkk`}, movie.id);
-          }}>
+          <form action="#" className="add-review__form" onSubmit={this.handleSubmit} ref={this.formRef}>
             <div className="rating">
               <div className="rating__stars">
-                <input className="rating__input" id="star-1" type="radio" name="rating" value="1"/>
+                <input className="rating__input" id="star-1" type="radio" name="rating" value="1" />
                 <label className="rating__label" htmlFor="star-1">Rating 1</label>
 
                 <input className="rating__input" id="star-2" type="radio" name="rating" value="2" />
@@ -73,7 +84,7 @@ class NewReview extends PureComponent {
             </div>
 
             <div className="add-review__text">
-              <textarea className="add-review__textarea" name="review-text" id="review-text" placeholder="Review text"></textarea>
+              <textarea className="add-review__textarea" name="review-text" id="review-text" placeholder="Review text" ref={this.commentRef}></textarea>
               <div className="add-review__submit">
                 <button className="add-review__btn" type="submit">Post</button>
               </div>
