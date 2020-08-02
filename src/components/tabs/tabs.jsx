@@ -1,10 +1,9 @@
 import React, {PureComponent} from 'react';
-import PropTypes from 'prop-types';
+import PropTypes, {array} from 'prop-types';
 import {TabCodes} from '../../constants';
 import MovieOverview from '../movie-overview/movie-overview.jsx';
 import MovieDetails from '../movie-details/movie-details.jsx';
 import MovieReviews from '../movie-reviews/movie-reviews.jsx';
-import comments from '../../mocks/comments';
 
 export default class Tabs extends PureComponent {
   constructor(props) {
@@ -18,7 +17,7 @@ export default class Tabs extends PureComponent {
       case TabCodes.DETAILS.toLowerCase():
         return <MovieDetails movie={this.props.movie} />;
       case TabCodes.REVIEWS.toLocaleLowerCase():
-        return <MovieReviews comments={comments} />;
+        return <MovieReviews comments={this.props.comments} />;
     }
 
     return null;
@@ -56,4 +55,5 @@ Tabs.propTypes = {
   movie: PropTypes.shape({}).isRequired,
   activeTab: PropTypes.string.isRequired,
   onTabClick: PropTypes.func.isRequired,
+  comments: array.isRequired,
 };

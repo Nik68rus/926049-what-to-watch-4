@@ -4,11 +4,12 @@ import Tabs from '../tabs/tabs.jsx';
 import FilmList from '../film-list/film-list.jsx';
 import withActiveTab from '../../hocs/with-active-tab/with-active-tab';
 import UserBlock from '../user-block/user-block.js';
+import {AuthorizationStatus} from '../../reducer/user/user.js';
 
 const TabsWraaped = withActiveTab(Tabs);
 
 const MoviePage = (props) => {
-  const {movie, onCardClick, similarMovies, onPlayMovieClick, authorizationStatus} = props;
+  const {movie, onCardClick, similarMovies, onPlayMovieClick, authorizationStatus, comments} = props;
   const {title, poster, background, backgroundColor, genre, date} = movie;
   return (
     <Fragment>
@@ -54,7 +55,7 @@ const MoviePage = (props) => {
                   </svg>
                   <span>My list</span>
                 </button>
-                <a href="add-review.html" className="btn movie-card__button">Add review</a>
+                {authorizationStatus === AuthorizationStatus.AUTH ? <a href="add-review.html" className="btn movie-card__button">Add review</a> : `` }
               </div>
             </div>
           </div>
@@ -66,7 +67,7 @@ const MoviePage = (props) => {
               <img src={poster} alt="The Grand Budapest Hotel poster" width="218" height="327" />
             </div>
 
-            <TabsWraaped movie={movie} />
+            <TabsWraaped movie={movie} comments={comments} />
 
           </div>
         </div>
@@ -102,6 +103,7 @@ MoviePage.propTypes = {
   onCardClick: PropTypes.func.isRequired,
   onPlayMovieClick: PropTypes.func.isRequired,
   authorizationStatus: PropTypes.string.isRequired,
+  comments: PropTypes.array.isRequired,
 };
 
 export default MoviePage;

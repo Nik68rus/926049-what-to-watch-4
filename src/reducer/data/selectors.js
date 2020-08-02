@@ -19,3 +19,8 @@ export const getUniqueGenres = createSelector(getMovies, (movies) => {
 export const getGenreMovies = createSelector(getMovies, getGenre, (films, genre) => {
   return genre === `All genres` ? films : films.filter((item) => item.genre === genre);
 });
+
+export const getComments = (state) => {
+  return state[NAME_SPACE].comments;
+};
+
