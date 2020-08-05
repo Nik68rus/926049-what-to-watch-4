@@ -5,12 +5,14 @@ import FilmList from '../film-list/film-list.jsx';
 import withActiveTab from '../../hocs/with-active-tab/with-active-tab';
 import UserBlock from '../user-block/user-block.js';
 import {AuthorizationStatus} from '../../reducer/user/user.js';
+import {Link} from 'react-router-dom';
+import {AppRoute} from '../../constants';
 
 const TabsWraaped = withActiveTab(Tabs);
 
 const MoviePage = (props) => {
-  const {movie, onCardClick, similarMovies, onPlayMovieClick, authorizationStatus, comments} = props;
-  const {title, poster, background, backgroundColor, genre, date} = movie;
+  const {movie, onCardClick, similarMovies, onPlayMovieClick, authorizationStatus, comments, onAddToFavorite} = props;
+  const {id, title, poster, background, backgroundColor, genre, date, isFavorite} = movie;
   return (
     <Fragment>
       <section className="movie-card movie-card--full" style={{backgroundColor}}>
@@ -23,11 +25,11 @@ const MoviePage = (props) => {
 
           <header className="page-header movie-card__head">
             <div className="logo">
-              <a href="main.html" className="logo__link">
+              <Link to={AppRoute.ROOT} className="logo__link">
                 <span className="logo__letter logo__letter--1">W</span>
                 <span className="logo__letter logo__letter--2">T</span>
                 <span className="logo__letter logo__letter--3">W</span>
-              </a>
+              </Link>
             </div>
 
             <UserBlock authorizationStatus={authorizationStatus} />
@@ -49,9 +51,11 @@ const MoviePage = (props) => {
                   </svg>
                   <span>Play</span>
                 </button>
-                <button className="btn btn--list movie-card__button" type="button">
+                <button className="btn btn--list movie-card__button" type="button" onClick={() => {
+                  onAddToFavorite(id, isFavorite ? 0 : 1);
+                }}>
                   <svg viewBox="0 0 19 20" width="19" height="20">
-                    <use xlinkHref="#add"></use>
+                    <use xlinkHref={isFavorite ? `#in-list` : `#add`}></use>
                   </svg>
                   <span>My list</span>
                 </button>

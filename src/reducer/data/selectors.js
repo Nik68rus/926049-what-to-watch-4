@@ -4,7 +4,7 @@ import {getGenre} from '../application/selectors';
 
 const NAME_SPACE = NameSpace.DATA;
 
-const getMovies = (state) => {
+export const getMovies = (state) => {
   return state[NAME_SPACE].films;
 };
 
