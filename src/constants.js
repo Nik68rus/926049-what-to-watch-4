@@ -10,3 +10,9 @@ export const GanreTypes = {
   crime: `Crime`,
   documentary: `Documentary`,
 };
+
+export const AppRoute = {
+  ROOT: `/`,
+  LOGIN: `/login`,
+  LIST: `/mylist`,
+};

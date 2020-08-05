@@ -1,7 +1,7 @@
 import React, {PureComponent} from 'react';
 import Main from '../main/main.jsx';
 import PropTypes from 'prop-types';
-import {Switch, Route, BrowserRouter} from "react-router-dom";
+import {Switch, Route, Router} from "react-router-dom";
 import MoviePage from '../movie-page/movie-page.jsx';
 import {connect} from 'react-redux';
 import {ActionCreator} from '../../reducer/application/application';
@@ -13,6 +13,8 @@ import {getAuthStatus} from '../../reducer/user/selectors';
 import {Operation as UserOperation, ActionCreator as UserActionCreator, AuthorizationStatus} from '../../reducer/user/user';
 import {Operation as DataOperation} from '../../reducer/data/data';
 import NewReview from '../new-review/new-review';
+import {AppRoute} from '../../constants';
+import history from '../../history';
 
 class App extends PureComponent {
   constructor(props) {
@@ -20,7 +22,7 @@ class App extends PureComponent {
   }
 
   _renderApp() {
-    const {movie, activeMovie, movies, shown, genres, activeGenre, onGenreClick, onShowMoreClick, onCardClick, isMoviePlaying, onPlayMovieClick, authorizationStatus, comments} = this.props;
+    const {movie, activeMovie, movies, shown, genres, activeGenre, onGenreClick, onShowMoreClick, onCardClick, isMoviePlaying, onPlayMovieClick, authorizationStatus, comments, onAddToFavorite} = this.props;
     const currentMovie = activeMovie === 0 ? movie : movies.find((item) => item.id === activeMovie);
     if (isMoviePlaying) {
       return (
@@ -41,6 +43,7 @@ class App extends PureComponent {
         onPlayMovieClick={onPlayMovieClick}
         isMoviePlaying={isMoviePlaying}
         authorizationStatus={authorizationStatus}
+        onAddToFavorite={onAddToFavorite}
       />;
     } else {
       const choosenMovie = movies.find((item) => item.id === activeMovie);
@@ -52,6 +55,7 @@ class App extends PureComponent {
         onPlayMovieClick={onPlayMovieClick}
         authorizationStatus={authorizationStatus}
         comments={comments}
+        onAddToFavorite={onAddToFavorite}
       />;
     }
   }
@@ -59,22 +63,22 @@ class App extends PureComponent {
   render() {
     const {movie, onCommentPost} = this.props;
     return (
-      <BrowserRouter>
+      <Router history={history}>
         <Switch>
-          <Route exact path="/">
+          <Route exact path={AppRoute.ROOT}>
             {this._renderApp()}
           </Route>
-          <Route exact path="/dev-signin">
+          <Route exact path={AppRoute.LOGIN}>
             <SignIn onSubmit={this.props.onLogin}/>
           </Route>
-          <Route exact path="/dev-review">
+          {/* <Route exact path="/dev-review">
             <NewReview onSubmit={onCommentPost}
               movie={movie}
             />
-          </Route>
+          </Route> */}
 
         </Switch>
-      </BrowserRouter>
+      </Router>
     );
   }
 }
@@ -101,6 +105,7 @@ App.propTypes = {
   onPlayMovieClick: PropTypes.func.isRequired,
   authorizationStatus: PropTypes.string.isRequired,
   onLogin: PropTypes.func.isRequired,
+  onAddToFavorite: PropTypes.func.isRequired,
 };
 
 const mapStateToProps = (state) => ({
@@ -141,6 +146,12 @@ const mapDispatchToProps = (dispatch) => ({
 
   onCommentPost(comment, id) {
     dispatch(DataOperation.postComment(comment, id));
+  },
+
+  onAddToFavorite(id, status) {
+    dispatch(DataOperation.changeFavorite(id, status));
+    dispatch(DataOperation.loadMovies());
+    dispatch(DataOperation.getPromo());
   }
 });
 

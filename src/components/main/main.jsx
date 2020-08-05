@@ -7,7 +7,8 @@ import {AuthorizationStatus} from '../../reducer/user/user.js';
 import UserBlock from '../user-block/user-block';
 
 const Main = (props) => {
-  const {mainMovie, movieList, genres, activeGenre, onGenreClick, onCardClick, onShowMoreClick, shown, onPlayMovieClick, isMoviePlaying, authorizationStatus} = props;
+  const {mainMovie, movieList, genres, activeGenre, onGenreClick, onCardClick, onShowMoreClick, shown, onPlayMovieClick, isMoviePlaying, authorizationStatus, onAddToFavorite} = props;
+  const {id, isFavorite} = mainMovie;
   return <>
       <section className="movie-card">
         <div className="movie-card__bg">
@@ -49,9 +50,11 @@ const Main = (props) => {
                   </svg>
                   <span>Play</span>
                 </button>
-                <button className="btn btn--list movie-card__button" type="button">
+                <button className="btn btn--list movie-card__button" type="button" onClick={() => {
+                  onAddToFavorite(id, isFavorite ? 0 : 1);
+                }}>
                   <svg viewBox="0 0 19 20" width="19" height="20">
-                    <use xlinkHref="#add"></use>
+                    <use xlinkHref={isFavorite ? `#in-list` : `#add`}></use>
                   </svg>
                   <span>My list</span>
                 </button>

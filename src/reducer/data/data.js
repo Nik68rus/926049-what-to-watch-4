@@ -4,6 +4,7 @@ import {createMovie} from '../../adapters/films';
 const initialState = {
   promoMovie: {},
   films: [],
+  favoriteFilms: [],
   comments: [],
 };
 
@@ -11,11 +12,22 @@ const convertMovies = (movies) => {
   return movies.map((film) => createMovie(film));
 };
 
+const actualizeFilms = (films, promo, id) => {
+  const movieIndex = films.findIndex((film) => film.id === id);
+  films[movieIndex].isFavorite = !films[movieIndex].isFavorite;
+  if (promo.id === id) {
+    promo.isFavorite = !promo.isFavorite;
+  }
+  return {films, promoMovie: promo};
+};
+
 const ActionType = {
   LOAD_MOVIES: `LOAD_MOVIES`,
   GET_PROMO: `GET_PROMO`,
   LOAD_COMMENTS: `LOAD_COMMENTS`,
   POST_COMMENT: `POST_COMMENT`,
+  GET_FAVORITE: `GET_FAVORITE`,
+  CHANGE_FAVORITE: `CHANGE_FAVORITE`,
 };
 
 const ActionCreator = {
@@ -31,6 +43,14 @@ const ActionCreator = {
     type: ActionType.LOAD_COMMENTS,
     payload: comments,
   }),
+  getFavorite: (list) => ({
+    type: ActionType.GET_FAVORITE,
+    payload: list,
+  }),
+  changeFavorite: (film) => ({
+    type: ActionType.CHANGE_FAVORITE,
+    payload: film.id,
+  })
 };
 
 const Operation = {
@@ -60,6 +80,20 @@ const Operation = {
     .then((response) => {
       dispatch(ActionCreator.loadComments(response.data));
     });
+  },
+
+  getFavorite: () => (dispatch, getState, api) => {
+    return api.get(`/favorite`)
+    .then((response) => {
+      dispatch(ActionCreator.getFavorite(response.data));
+    });
+  },
+
+  changeFavorite: (id, status) => (dispatch, getState, api) => {
+    return api.post(`/favorite/${id}/${status}`)
+    .then((response) => {
+      dispatch(ActionCreator.changeFavorite(response.data));
+    });
   }
 };
 
@@ -71,6 +105,10 @@ const reducer = (state = initialState, action) => {
       return extend(state, {promoMovie: action.payload});
     case ActionType.LOAD_COMMENTS:
       return extend(state, {comments: action.payload});
+    case ActionType.GET_FAVORITE:
+      return extend(state, {favoriteFilms: action.payload});
+    case ActionType.CHANGE_FAVORITE:
+      return extend(state, actualizeFilms(state.films, state.promoMovie, action.payload));
   }
   return state;
 };
