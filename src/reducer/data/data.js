@@ -1,8 +1,17 @@
 import {extend} from '../../utils';
 import {createMovie} from '../../adapters/films';
+import {ActionCreator as ApplicationActionCreator} from '../application/application';
 
 const initialState = {
-  promoMovie: {},
+  promoMovie: {
+    id: 0,
+    preview: ``,
+    title: ``,
+    genre: ``,
+    date: 0,
+    background: ``,
+    isFavorite: false,
+  },
   films: [],
   favoriteFilms: [],
   comments: [],
@@ -13,12 +22,13 @@ const convertMovies = (movies) => {
 };
 
 const actualizeFilms = (films, promo, id) => {
+  const newPromo = Object.assign(promo);
+  newPromo.isFavorite = newPromo.id === id ? !newPromo.isFavorite : newPromo.isFavorite;
   const movieIndex = films.findIndex((film) => film.id === id);
-  films[movieIndex].isFavorite = !films[movieIndex].isFavorite;
-  if (promo.id === id) {
-    promo.isFavorite = !promo.isFavorite;
-  }
-  return {films, promoMovie: promo};
+  const newMovies = films;
+  newMovies[movieIndex].isFavorite = !films[movieIndex].isFavorite;
+  const difference = {films: newMovies, promoMovie: newPromo};
+  return difference;
 };
 
 const ActionType = {
@@ -65,6 +75,7 @@ const Operation = {
     return api.get(`/films/promo`)
     .then((response) => {
       dispatch(ActionCreator.getPromo(response.data));
+      dispatch(ApplicationActionCreator.setActiveMovie(response.data.id));
     });
   },
 

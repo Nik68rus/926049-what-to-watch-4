@@ -1,5 +1,9 @@
 import React, {PureComponent, createRef} from 'react';
 import PropTypes from 'prop-types';
+import {connect} from 'react-redux';
+import {getMovies} from '../../reducer/data/selectors';
+import {getActiveMovie} from '../../reducer/application/selectors';
+import {getMovieIndex} from '../../utils';
 
 class FullScreenPlayer extends PureComponent {
   constructor(props) {
@@ -15,10 +19,16 @@ class FullScreenPlayer extends PureComponent {
 
     this._handlePlayClick = this._handlePlayClick.bind(this);
     this._handleFullScreenClick = this._handleFullScreenClick.bind(this);
+    this._handleExitClick = this._handleExitClick.bind(this);
   }
 
   _handlePlayClick() {
     this.setState({isPlaying: !this.state.isPlaying});
+  }
+
+  _handleExitClick() {
+    const {history} = this.props;
+    history.goBack();
   }
 
   _handleFullScreenClick() {
@@ -38,7 +48,7 @@ class FullScreenPlayer extends PureComponent {
   }
 
   componentDidMount() {
-    const {src, poster} = this.props;
+    const {src, poster} = this.props.movie;
     const video = this._videoRef.current;
 
     if (video) {
@@ -80,13 +90,14 @@ class FullScreenPlayer extends PureComponent {
   }
 
   render() {
-    const {onExitClick, isMoviePlaying, title, src, poster} = this.props;
+    const {movie} = this.props;
+    const {title, src, preview} = movie;
     const {progress, timeElapsed, isPlaying} = this.state;
     return (
       <div className="player">
-        <video src={src} className="player__video" poster={poster} ref={this._videoRef}></video>
+        <video src={src} className="player__video" poster={preview} ref={this._videoRef}></video>
 
-        <button type="button" className="player__exit" onClick={() => onExitClick(isMoviePlaying)}>Exit</button>
+        <button type="button" className="player__exit" onClick={this._handleExitClick}>Exit</button>
 
         <div className="player__controls">
           <div className="player__controls-row">
@@ -120,11 +131,17 @@ class FullScreenPlayer extends PureComponent {
 }
 
 FullScreenPlayer.propTypes = {
-  onExitClick: PropTypes.func.isRequired,
-  isMoviePlaying: PropTypes.bool.isRequired,
-  title: PropTypes.string.isRequired,
-  src: PropTypes.string.isRequired,
-  poster: PropTypes.string.isRequired,
+  movie: PropTypes.shape({
+    title: PropTypes.string.isRequired,
+    src: PropTypes.string.isRequired,
+    preview: PropTypes.string.isRequired,
+  }).isRequired,
+  history: PropTypes.object.isRequired,
 };
 
-export default FullScreenPlayer;
+const mapStateToProps = (state) => ({
+  movie: getMovies(state)[getMovieIndex(getMovies(state), getActiveMovie(state))],
+});
+
+export {FullScreenPlayer};
+export default connect(mapStateToProps)(FullScreenPlayer);
