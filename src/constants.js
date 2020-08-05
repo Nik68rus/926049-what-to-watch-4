@@ -1,3 +1,5 @@
+export const HOST = `https://4.react.pages.academy`;
+
 export const TabCodes = {
   OVERVIEW: `Overview`,
   DETAILS: `Details`,
@@ -15,4 +17,5 @@ export const AppRoute = {
   ROOT: `/`,
   LOGIN: `/login`,
   LIST: `/mylist`,
+  FILMS: `/films`,
 };

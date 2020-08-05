@@ -6,8 +6,8 @@ import MoviePage from '../movie-page/movie-page.jsx';
 import {connect} from 'react-redux';
 import {ActionCreator} from '../../reducer/application/application';
 import FullScreenPlayer from '../full-screen-player/full-screen-player.jsx';
-import {getUniqueGenres, getPromoMovie, getGenreMovies, getComments} from '../../reducer/data/selectors';
-import {getGenre, getActiveMovie, getPlayingStatus, getCardsToShow} from '../../reducer/application/selectors';
+import {getUniqueGenres, getGenreMovies} from '../../reducer/data/selectors';
+import {getGenre} from '../../reducer/application/selectors';
 import SignIn from '../sign-in/sign-in.jsx';
 import {getAuthStatus} from '../../reducer/user/selectors';
 import {Operation as UserOperation, ActionCreator as UserActionCreator, AuthorizationStatus} from '../../reducer/user/user';
@@ -15,68 +15,48 @@ import {Operation as DataOperation} from '../../reducer/data/data';
 import NewReview from '../new-review/new-review';
 import {AppRoute} from '../../constants';
 import history from '../../history';
+import MyList from '../my-list/my-list';
+import PrivateRoute from '../private-route/private-route';
 
 class App extends PureComponent {
   constructor(props) {
     super(props);
   }
 
-  _renderApp() {
-    const {movie, activeMovie, movies, shown, genres, activeGenre, onGenreClick, onShowMoreClick, onCardClick, isMoviePlaying, onPlayMovieClick, authorizationStatus, comments, onAddToFavorite} = this.props;
-    const currentMovie = activeMovie === 0 ? movie : movies.find((item) => item.id === activeMovie);
-    if (isMoviePlaying) {
-      return (
-        <FullScreenPlayer title= {currentMovie.title} src={currentMovie.src} poster={currentMovie.preview} onExitClick={onPlayMovieClick} isMoviePlaying={isMoviePlaying}/>
-      );
-    }
-
-    if (activeMovie === 0) {
-      return <Main
-        mainMovie={movie}
-        movieList={movies}
-        genres={genres}
-        activeGenre={activeGenre}
-        onGenreClick={onGenreClick}
-        onShowMoreClick={onShowMoreClick}
-        onCardClick={onCardClick}
-        shown={shown}
-        onPlayMovieClick={onPlayMovieClick}
-        isMoviePlaying={isMoviePlaying}
-        authorizationStatus={authorizationStatus}
-        onAddToFavorite={onAddToFavorite}
-      />;
-    } else {
-      const choosenMovie = movies.find((item) => item.id === activeMovie);
-      const similarMovies = movies.filter((item) => item.genre === choosenMovie.genre).slice(0, 4);
-      return <MoviePage
-        movie={choosenMovie}
-        similarMovies={similarMovies}
-        onCardClick={onCardClick}
-        onPlayMovieClick={onPlayMovieClick}
-        authorizationStatus={authorizationStatus}
-        comments={comments}
-        onAddToFavorite={onAddToFavorite}
-      />;
-    }
-  }
-
   render() {
-    const {movie, onCommentPost} = this.props;
+    const {onCardClick, onPlayMovieClick, authorizationStatus, onLogin, onAddToFavorite} = this.props;
+
     return (
       <Router history={history}>
         <Switch>
-          <Route exact path={AppRoute.ROOT}>
-            {this._renderApp()}
-          </Route>
+          <Route exact path={AppRoute.ROOT} render={() =>
+            <Main
+              onCardClick={onCardClick}
+              onPlayMovieClick={onPlayMovieClick}
+              authorizationStatus={authorizationStatus}
+              onAddToFavorite={onAddToFavorite}
+            />}/>
           <Route exact path={AppRoute.LOGIN}>
-            <SignIn onSubmit={this.props.onLogin}/>
+            <SignIn onSubmit={onLogin}/>
           </Route>
-          {/* <Route exact path="/dev-review">
-            <NewReview onSubmit={onCommentPost}
-              movie={movie}
-            />
-          </Route> */}
-
+          <Route exact path={`${AppRoute.FILMS}/:id/player`}>
+            <FullScreenPlayer history={history}/>
+          </Route>
+          <Route exact path={`${AppRoute.FILMS}/:id/review`}>
+            <NewReview history={history} />
+          </Route>
+          <PrivateRoute exact path={AppRoute.LIST} render={() => {
+            return (
+              <MyList authorizationStatus={authorizationStatus} onCardClick={onCardClick}/>
+            );
+          }} />
+          <Route exact path={`${AppRoute.FILMS}/:id`} render={() =>
+            <MoviePage
+              onCardClick={onCardClick}
+              onPlayMovieClick={onPlayMovieClick}
+              authorizationStatus={authorizationStatus}
+              onAddToFavorite={onAddToFavorite}
+            />}/>
         </Switch>
       </Router>
     );
@@ -84,24 +64,9 @@ class App extends PureComponent {
 }
 
 App.propTypes = {
-  movie: PropTypes.shape({
-    id: PropTypes.number.isRequired,
-    preview: PropTypes.string.isRequired,
-    title: PropTypes.string.isRequired,
-    genre: PropTypes.string.isRequired,
-    date: PropTypes.number.isRequired,
-    src: PropTypes.string.isRequired,
-    poster: PropTypes.string.isRequired,
-  }).isRequired,
-  movies: PropTypes.array.isRequired,
   genres: PropTypes.array.isRequired,
   activeGenre: PropTypes.string.isRequired,
-  onGenreClick: PropTypes.func.isRequired,
-  onShowMoreClick: PropTypes.func.isRequired,
   onCardClick: PropTypes.func.isRequired,
-  activeMovie: PropTypes.number.isRequired,
-  shown: PropTypes.number.isRequired,
-  isMoviePlaying: PropTypes.bool.isRequired,
   onPlayMovieClick: PropTypes.func.isRequired,
   authorizationStatus: PropTypes.string.isRequired,
   onLogin: PropTypes.func.isRequired,
@@ -109,34 +74,22 @@ App.propTypes = {
 };
 
 const mapStateToProps = (state) => ({
-  movie: getPromoMovie(state),
-  activeMovie: getActiveMovie(state),
-  isMoviePlaying: getPlayingStatus(state),
   movies: getGenreMovies(state),
   activeGenre: getGenre(state),
   genres: getUniqueGenres(state),
-  shown: getCardsToShow(state),
   authorizationStatus: getAuthStatus(state),
-  comments: getComments(state),
 });
 
 const mapDispatchToProps = (dispatch) => ({
-  onGenreClick(genre) {
-    dispatch(ActionCreator.changeGenre(genre));
-    dispatch(ActionCreator.getList(genre));
-  },
-
-  onShowMoreClick() {
-    dispatch(ActionCreator.showMore());
-  },
-
   onCardClick(id) {
-    dispatch(ActionCreator.showDetails(id));
+    dispatch(ActionCreator.setActiveMovie(id));
     dispatch(DataOperation.loadComments(id));
+    history.push(`${AppRoute.FILMS}/${id}`);
   },
 
-  onPlayMovieClick(status) {
+  onPlayMovieClick(id) {
     dispatch(ActionCreator.playMovie(status));
+    history.push(`${AppRoute.FILMS}/${id}/player`);
   },
 
   onLogin(authData) {
@@ -144,14 +97,8 @@ const mapDispatchToProps = (dispatch) => ({
     dispatch(UserActionCreator.requireAuthorization(AuthorizationStatus.AUTH));
   },
 
-  onCommentPost(comment, id) {
-    dispatch(DataOperation.postComment(comment, id));
-  },
-
   onAddToFavorite(id, status) {
     dispatch(DataOperation.changeFavorite(id, status));
-    dispatch(DataOperation.loadMovies());
-    dispatch(DataOperation.getPromo());
   }
 });
 

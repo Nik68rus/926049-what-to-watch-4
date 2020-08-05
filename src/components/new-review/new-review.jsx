@@ -1,6 +1,14 @@
 import React, {PureComponent, createRef} from 'react';
 import PropTypes from 'prop-types';
 import UserBlock from '../user-block/user-block';
+import {connect} from 'react-redux';
+import {getMovies} from '../../reducer/data/selectors';
+import {getActiveMovie} from '../../reducer/application/selectors';
+import {getMovieIndex} from '../../utils';
+import {Operation as DataOperation} from '../../reducer/data/data';
+import {getAuthStatus} from '../../reducer/user/selectors';
+import {AppRoute} from '../../constants';
+import {Link} from 'react-router-dom';
 
 class NewReview extends PureComponent {
   constructor(props) {
@@ -12,12 +20,13 @@ class NewReview extends PureComponent {
   }
 
   handleSubmit(evt) {
-    const {onSubmit, movie} = this.props;
+    const {onSubmit, movie, history} = this.props;
     evt.preventDefault();
     onSubmit({
       rating: this.formRef.current.rating.value,
       comment: this.commentRef.current.value,
     }, movie.id);
+    history.goBack();
   }
 
   render() {
@@ -35,11 +44,11 @@ class NewReview extends PureComponent {
 
           <header className="page-header">
             <div className="logo">
-              <a href="main.html" className="logo__link">
+              <Link to={AppRoute.ROOT} className="logo__link">
                 <span className="logo__letter logo__letter--1">W</span>
                 <span className="logo__letter logo__letter--2">T</span>
                 <span className="logo__letter logo__letter--3">W</span>
-              </a>
+              </Link>
             </div>
 
             <nav className="breadcrumbs">
@@ -53,7 +62,7 @@ class NewReview extends PureComponent {
               </ul>
             </nav>
 
-            <UserBlock authorizationStatus={authorizationStatus} />
+            <UserBlock />
 
           </header>
 
@@ -86,7 +95,7 @@ class NewReview extends PureComponent {
             <div className="add-review__text">
               <textarea className="add-review__textarea" name="review-text" id="review-text" placeholder="Review text" ref={this.commentRef}></textarea>
               <div className="add-review__submit">
-                <button className="add-review__btn" type="submit">Post</button>
+                <button className="add-review__btn" type="submit" onClick={this.handleSubmit}>Post</button>
               </div>
 
             </div>
@@ -98,4 +107,23 @@ class NewReview extends PureComponent {
   }
 }
 
-export default NewReview;
+const mapStateToProps = (state) => ({
+  movie: getMovies(state)[getMovieIndex(getMovies(state), getActiveMovie(state))],
+  authorizationStatus: getAuthStatus(state),
+});
+
+const mapDispatchToProps = (dispatch) => ({
+  onSubmit(comment, id) {
+    dispatch(DataOperation.postComment(comment, id));
+  },
+});
+
+NewReview.propTypes = {
+  movie: PropTypes.object.isRequired,
+  history: PropTypes.object.isRequired,
+  onSubmit: PropTypes.func.isRequired,
+  authorizationStatus: PropTypes.bool.isRequired,
+};
+
+export {NewReview};
+export default connect(mapStateToProps, mapDispatchToProps)(NewReview);

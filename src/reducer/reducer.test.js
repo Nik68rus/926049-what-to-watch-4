@@ -65,7 +65,7 @@ describe(`ActionCreator works correctly`, () => {
   });
 
   it(`ActionCreator for changing active movie returns correct action`, () => {
-    expect(ActionCreator.showDetails(`id1`)).toEqual({
+    expect(ActionCreator.setActiveMovie(`id1`)).toEqual({
       type: ActionType.SHOW_DETAILS,
       payload: `id1`,
     });

@@ -7,8 +7,16 @@ import UserBlock from '../user-block/user-block.js';
 import {AuthorizationStatus} from '../../reducer/user/user.js';
 import {Link} from 'react-router-dom';
 import {AppRoute} from '../../constants';
+import {connect} from 'react-redux';
+import {getMovies, getComments} from '../../reducer/data/selectors';
+import {getActiveMovie} from '../../reducer/application/selectors';
+import Footer from '../footer/footer.jsx';
+
 
 const TabsWraaped = withActiveTab(Tabs);
+
+const getMovieIndex = (movies, id) => movies.map((item) => item.id).indexOf(id);
+const getSimilarMovies = (activeMovie, movieList) => movieList.filter((item) => item.genre === activeMovie.genre).slice(0, 4);
 
 const MoviePage = (props) => {
   const {movie, onCardClick, similarMovies, onPlayMovieClick, authorizationStatus, comments, onAddToFavorite} = props;
@@ -32,7 +40,7 @@ const MoviePage = (props) => {
               </Link>
             </div>
 
-            <UserBlock authorizationStatus={authorizationStatus} />
+            <UserBlock />
 
           </header>
 
@@ -45,12 +53,12 @@ const MoviePage = (props) => {
               </p>
 
               <div className="movie-card__buttons">
-                <button className="btn btn--play movie-card__button" type="button" onClick={() => onPlayMovieClick(false)}>
+                <Link className="btn btn--play movie-card__button" to={`${AppRoute.FILMS}/${id}/player`}>
                   <svg viewBox="0 0 19 19" width="19" height="19">
                     <use xlinkHref="#play-s"></use>
                   </svg>
                   <span>Play</span>
-                </button>
+                </Link>
                 <button className="btn btn--list movie-card__button" type="button" onClick={() => {
                   onAddToFavorite(id, isFavorite ? 0 : 1);
                 }}>
@@ -59,7 +67,7 @@ const MoviePage = (props) => {
                   </svg>
                   <span>My list</span>
                 </button>
-                {authorizationStatus === AuthorizationStatus.AUTH ? <a href="add-review.html" className="btn movie-card__button">Add review</a> : `` }
+                {authorizationStatus === AuthorizationStatus.AUTH ? <Link to={`${AppRoute.FILMS}/${id}/review`} className="btn movie-card__button">Add review</Link> : `` }
               </div>
             </div>
           </div>
@@ -83,19 +91,7 @@ const MoviePage = (props) => {
 
         </section>
 
-        <footer className="page-footer">
-          <div className="logo">
-            <a href="main.html" className="logo__link logo__link--light">
-              <span className="logo__letter logo__letter--1">W</span>
-              <span className="logo__letter logo__letter--2">T</span>
-              <span className="logo__letter logo__letter--3">W</span>
-            </a>
-          </div>
-
-          <div className="copyright">
-            <p>© 2019 What to watch Ltd.</p>
-          </div>
-        </footer>
+        <Footer />
       </div>
     </Fragment>
   );
@@ -110,4 +106,15 @@ MoviePage.propTypes = {
   comments: PropTypes.array.isRequired,
 };
 
-export default MoviePage;
+const mapStateToProps = (state) => ({
+  movie: getMovies(state)[getMovieIndex(getMovies(state), getActiveMovie(state))],
+  similarMovies: getSimilarMovies(getMovies(state)[getMovieIndex(getMovies(state), getActiveMovie(state))], getMovies(state)),
+  comments: getComments(state),
+});
+
+const mapDispatchToProps = (dispatch) => ({
+
+});
+
+export {MoviePage};
+export default connect(mapStateToProps, mapDispatchToProps)(MoviePage);

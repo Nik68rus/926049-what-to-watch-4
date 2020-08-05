@@ -10,10 +10,6 @@ export const getActiveMovie = (state) => {
   return state[NAME_SPACE].activeMovie;
 };
 
-export const getPlayingStatus = (state) => {
-  return state[NAME_SPACE].isMoviePlaying;
-};
-
 export const getCardsToShow = (state) => {
   return state[NAME_SPACE].cardsToShow;
 };

@@ -3,11 +3,19 @@ import PropTypes from 'prop-types';
 import FilmList from '../film-list/film-list.jsx';
 import GenreList from '../genre-list/genre-list.jsx';
 import ShowMoreButton from '../show-more-btn/show-more-btn';
-import {AuthorizationStatus} from '../../reducer/user/user.js';
 import UserBlock from '../user-block/user-block';
+import {connect} from 'react-redux';
+import {getUniqueGenres, getPromoMovie, getGenreMovies, getComments} from '../../reducer/data/selectors';
+import {getGenre, getActiveMovie, getPlayingStatus, getCardsToShow} from '../../reducer/application/selectors';
+import {ActionCreator} from '../../reducer/application/application';
+import {Operation as DataOperation} from '../../reducer/data/data';
+import {AppRoute} from '../../constants.js';
+import {Link} from 'react-router-dom';
+import Footer from '../footer/footer.jsx';
+
 
 const Main = (props) => {
-  const {mainMovie, movieList, genres, activeGenre, onGenreClick, onCardClick, onShowMoreClick, shown, onPlayMovieClick, isMoviePlaying, authorizationStatus, onAddToFavorite} = props;
+  const {mainMovie, movieList, genres, activeGenre, onGenreClick, onCardClick, onShowMoreClick, shown, authorizationStatus, onAddToFavorite, onAddPromoToFavoriteClick} = props;
   const {id, isFavorite} = mainMovie;
   return <>
       <section className="movie-card">
@@ -26,7 +34,7 @@ const Main = (props) => {
             </a>
           </div>
 
-          <UserBlock authorizationStatus={authorizationStatus} />
+          <UserBlock />
 
         </header>
 
@@ -44,14 +52,15 @@ const Main = (props) => {
               </p>
 
               <div className="movie-card__buttons">
-                <button className="btn btn--play movie-card__button" type="button" onClick={() => onPlayMovieClick(isMoviePlaying)}>
+                <Link className="btn btn--play movie-card__button" to={`${AppRoute.FILMS}/${id}/player`}>
                   <svg viewBox="0 0 19 19" width="19" height="19">
                     <use xlinkHref="#play-s"></use>
                   </svg>
                   <span>Play</span>
-                </button>
+                </Link>
                 <button className="btn btn--list movie-card__button" type="button" onClick={() => {
                   onAddToFavorite(id, isFavorite ? 0 : 1);
+                  onAddPromoToFavoriteClick();
                 }}>
                   <svg viewBox="0 0 19 20" width="19" height="20">
                     <use xlinkHref={isFavorite ? `#in-list` : `#add`}></use>
@@ -72,19 +81,7 @@ const Main = (props) => {
         {movieList.length > shown ? <ShowMoreButton onShowMoreClick={onShowMoreClick} /> : ``}
       </section>
 
-      <footer className="page-footer">
-        <div className="logo">
-          <a className="logo__link logo__link--light">
-            <span className="logo__letter logo__letter--1">W</span>
-            <span className="logo__letter logo__letter--2">T</span>
-            <span className="logo__letter logo__letter--3">W</span>
-          </a>
-        </div>
-
-        <div className="copyright">
-          <p>© 2019 What to watch Ltd.</p>
-        </div>
-      </footer>
+      <Footer />
     </div>
 
   </>;
@@ -107,8 +104,31 @@ Main.propTypes = {
   onShowMoreClick: PropTypes.func.isRequired,
   onPlayMovieClick: PropTypes.func.isRequired,
   shown: PropTypes.number.isRequired,
-  isMoviePlaying: PropTypes.bool.isRequired,
   authorizationStatus: PropTypes.string.isRequired,
 };
 
-export default Main;
+const mapStateToProps = (state) => ({
+  mainMovie: getPromoMovie(state),
+  movieList: getGenreMovies(state),
+  genres: getUniqueGenres(state),
+  activeGenre: getGenre(state),
+  shown: getCardsToShow(state),
+});
+
+const mapDispatchToProps = (dispatch) => ({
+  onGenreClick(genre) {
+    dispatch(ActionCreator.changeGenre(genre));
+    dispatch(ActionCreator.getList(genre));
+  },
+
+  onShowMoreClick() {
+    dispatch(ActionCreator.showMore());
+  },
+
+  onAddPromoToFavoriteClick() {
+    dispatch(DataOperation.getPromo());
+  }
+});
+
+export {Main};
+export default connect(mapStateToProps, mapDispatchToProps)(Main);
