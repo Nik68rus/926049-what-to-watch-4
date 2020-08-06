@@ -19,7 +19,7 @@ const getMovieIndex = (movies, id) => movies.map((item) => item.id).indexOf(id);
 const getSimilarMovies = (activeMovie, movieList) => movieList.filter((item) => item.genre === activeMovie.genre).slice(0, 4);
 
 const MoviePage = (props) => {
-  const {movie, onCardClick, similarMovies, onPlayMovieClick, authorizationStatus, comments, onAddToFavorite} = props;
+  const {movie, onCardClick, similarMovies, authorizationStatus, comments, onAddToFavorite} = props;
   const {id, title, poster, background, backgroundColor, genre, date, isFavorite} = movie;
   return (
     <Fragment>
@@ -88,7 +88,6 @@ const MoviePage = (props) => {
         <section className="catalog catalog--like-this">
           <h2 className="catalog__title">More like this</h2>
           <FilmList films={similarMovies} onCardClick={onCardClick} />
-
         </section>
 
         <Footer />
@@ -102,6 +101,7 @@ MoviePage.propTypes = {
   similarMovies: PropTypes.array.isRequired,
   onCardClick: PropTypes.func.isRequired,
   onPlayMovieClick: PropTypes.func.isRequired,
+  onAddToFavorite: PropTypes.func.isRequired,
   authorizationStatus: PropTypes.string.isRequired,
   comments: PropTypes.array.isRequired,
 };
@@ -112,9 +112,5 @@ const mapStateToProps = (state) => ({
   comments: getComments(state),
 });
 
-const mapDispatchToProps = (dispatch) => ({
-
-});
-
 export {MoviePage};
-export default connect(mapStateToProps, mapDispatchToProps)(MoviePage);
+export default connect(mapStateToProps)(MoviePage);

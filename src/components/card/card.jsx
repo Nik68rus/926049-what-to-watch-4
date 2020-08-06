@@ -2,8 +2,6 @@ import React from 'react';
 import PropTypes from 'prop-types';
 import Player from '../video-player/video-player.jsx';
 import withVideo from '../../hocs/with-video/with-video';
-import {Link} from 'react-router-dom';
-import {AppRoute} from '../../constants';
 
 const VideoPlayer = withVideo(Player);
 

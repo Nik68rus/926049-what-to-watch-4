@@ -1,12 +1,11 @@
 import React from 'react';
 import renderer from 'react-test-renderer';
-import Main from './main';
+import FullScreenPlayer from './full-screen-player';
+import history from '../../history';
 import configureStore from 'redux-mock-store';
 import {Provider} from 'react-redux';
 import NameSpace from '../../reducer/name-space';
 import {AuthorizationStatus} from '../../reducer/user/user';
-import {Router} from 'react-router-dom';
-import history from '../../history';
 
 const movie = {
   id: 1,
@@ -65,19 +64,20 @@ const store = mockStore({
   },
 });
 
-
-it(`Main screen correctly renders after relaunch`, () => {
+it(`FullScreenPlayer rendered correctly`, () => {
   const tree = renderer.create(
       <Provider store={store}>
-        <Router history={history}>
-          <Main
-            onCardClick={jest.fn()}
-            onPlayMovieClick={jest.fn()}
-            authorizationStatus={AuthorizationStatus.AUTH}
-            onAddToFavorite={jest.fn()}
-          />
-        </Router>
-      </Provider>
+        <FullScreenPlayer
+          movie={movie}
+          history={history}
+        />
+      </Provider>, {
+        createNodeMock: () => {
+          return {
+            onloadmetadata: () => {},
+          };
+        },
+      }
   ).toJSON();
   expect(tree).toMatchSnapshot();
 });

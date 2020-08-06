@@ -5,8 +5,8 @@ import GenreList from '../genre-list/genre-list.jsx';
 import ShowMoreButton from '../show-more-btn/show-more-btn';
 import UserBlock from '../user-block/user-block';
 import {connect} from 'react-redux';
-import {getUniqueGenres, getPromoMovie, getGenreMovies, getComments} from '../../reducer/data/selectors';
-import {getGenre, getActiveMovie, getPlayingStatus, getCardsToShow} from '../../reducer/application/selectors';
+import {getUniqueGenres, getPromoMovie, getGenreMovies} from '../../reducer/data/selectors';
+import {getGenre, getCardsToShow} from '../../reducer/application/selectors';
 import {ActionCreator} from '../../reducer/application/application';
 import {Operation as DataOperation} from '../../reducer/data/data';
 import {AppRoute} from '../../constants.js';
@@ -15,7 +15,7 @@ import Footer from '../footer/footer.jsx';
 
 
 const Main = (props) => {
-  const {mainMovie, movieList, genres, activeGenre, onGenreClick, onCardClick, onShowMoreClick, shown, authorizationStatus, onAddToFavorite, onAddPromoToFavoriteClick} = props;
+  const {mainMovie, movieList, genres, activeGenre, onGenreClick, onCardClick, onShowMoreClick, shown, onAddToFavorite, onAddPromoToFavoriteClick} = props;
   const {id, isFavorite} = mainMovie;
   return <>
       <section className="movie-card">
@@ -95,6 +95,7 @@ Main.propTypes = {
     genre: PropTypes.string.isRequired,
     date: PropTypes.number.isRequired,
     background: PropTypes.string.isRequired,
+    isFavorite: PropTypes.bool.isRequired,
   }).isRequired,
   movieList: PropTypes.array.isRequired,
   onCardClick: PropTypes.func.isRequired,
@@ -103,6 +104,8 @@ Main.propTypes = {
   onGenreClick: PropTypes.func.isRequired,
   onShowMoreClick: PropTypes.func.isRequired,
   onPlayMovieClick: PropTypes.func.isRequired,
+  onAddToFavorite: PropTypes.func.isRequired,
+  onAddPromoToFavoriteClick: PropTypes.func.isRequired,
   shown: PropTypes.number.isRequired,
   authorizationStatus: PropTypes.string.isRequired,
 };
@@ -118,7 +121,6 @@ const mapStateToProps = (state) => ({
 const mapDispatchToProps = (dispatch) => ({
   onGenreClick(genre) {
     dispatch(ActionCreator.changeGenre(genre));
-    dispatch(ActionCreator.getList(genre));
   },
 
   onShowMoreClick() {

@@ -1,5 +1,6 @@
 import {extend} from '../../utils';
 import {createMovie} from '../../adapters/films';
+
 import {ActionCreator as ApplicationActionCreator} from '../application/application';
 
 const initialState = {

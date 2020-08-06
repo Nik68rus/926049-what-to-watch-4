@@ -5,7 +5,7 @@ import MovieOverview from '../movie-overview/movie-overview.jsx';
 import MovieDetails from '../movie-details/movie-details.jsx';
 import MovieReviews from '../movie-reviews/movie-reviews.jsx';
 
-export default class Tabs extends PureComponent {
+class Tabs extends PureComponent {
   constructor(props) {
     super(props);
   }
@@ -57,3 +57,5 @@ Tabs.propTypes = {
   onTabClick: PropTypes.func.isRequired,
   comments: array.isRequired,
 };
+
+export default Tabs;

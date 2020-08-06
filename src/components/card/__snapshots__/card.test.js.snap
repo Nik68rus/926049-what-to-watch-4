@@ -12,13 +12,13 @@ exports[`Card rendered correctly 1`] = `
   >
     <video
       className="player__video"
-      poster="img/fantastic-beasts-the-crimes-of-grindelwald.jpg"
-      src="source"
+      poster="test.preview"
+      src="test.src"
     />
     <img
-      alt="Fantastic Beasts: The Crimes of Grindelwald"
+      alt="Test movie"
       height="175"
-      src="img/fantastic-beasts-the-crimes-of-grindelwald.jpg"
+      src="test.preview"
       width="280"
     />
   </div>
@@ -29,7 +29,7 @@ exports[`Card rendered correctly 1`] = `
       className="small-movie-card__link"
       href="movie-page.html"
     >
-      Fantastic Beasts: The Crimes of Grindelwald
+      Test movie
     </a>
   </h3>
 </article>

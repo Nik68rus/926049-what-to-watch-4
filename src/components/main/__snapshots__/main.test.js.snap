@@ -9,8 +9,8 @@ Array [
       className="movie-card__bg"
     >
       <img
-        alt="\\"Fantastic Beasts: The Crimes of Grindelwald\\""
-        src="img/bg-the-grand-budapest-hotel.jpg"
+        alt="\\"Test movie\\""
+        src="test.background"
       />
     </div>
     <h1
@@ -47,16 +47,13 @@ Array [
       <div
         className="user-block"
       >
-        <div
-          className="user-block__avatar"
+        <a
+          className="user-block__link"
+          href="/login"
+          onClick={[Function]}
         >
-          <img
-            alt="User avatar"
-            height="63"
-            src="img/avatar.jpg"
-            width="63"
-          />
-        </div>
+          Sign In
+        </a>
       </div>
     </header>
     <div
@@ -69,9 +66,9 @@ Array [
           className="movie-card__poster"
         >
           <img
-            alt="\\"Fantastic Beasts: The Crimes of Grindelwald\\""
+            alt="\\"Test movie\\""
             height="327"
-            src="img/the-grand-budapest-hotel-poster.jpg"
+            src="test.preview"
             width="218"
           />
         </div>
@@ -81,7 +78,7 @@ Array [
           <h2
             className="movie-card__title"
           >
-            Fantastic Beasts: The Crimes of Grindelwald
+            Test movie
           </h2>
           <p
             className="movie-card__meta"
@@ -89,20 +86,21 @@ Array [
             <span
               className="movie-card__genre"
             >
-              fantasy
+              test.genre
             </span>
             <span
               className="movie-card__year"
             >
-              2015
+              0
             </span>
           </p>
           <div
             className="movie-card__buttons"
           >
-            <button
+            <a
               className="btn btn--play movie-card__button"
-              type="button"
+              href="/films/1/player"
+              onClick={[Function]}
             >
               <svg
                 height="19"
@@ -116,9 +114,10 @@ Array [
               <span>
                 Play
               </span>
-            </button>
+            </a>
             <button
               className="btn btn--list movie-card__button"
+              onClick={[Function]}
               type="button"
             >
               <svg
@@ -152,21 +151,67 @@ Array [
       </h2>
       <ul
         className="catalog__genres-list"
-      />
+      >
+        <li
+          className="catalog__genres-item catalog__genres-item--active"
+        >
+          <a
+            className="catalog__genres-link"
+            href="#"
+            onClick={[Function]}
+          >
+            All genres
+          </a>
+        </li>
+        <li
+          className="catalog__genres-item "
+        >
+          <a
+            className="catalog__genres-link"
+            href="#"
+            onClick={[Function]}
+          >
+            test.genre
+          </a>
+        </li>
+      </ul>
       <div
         className="catalog__movies-list"
-      />
-      <div
-        className="catalog__more"
       >
-        <button
-          className="catalog__button"
+        <article
+          className="small-movie-card catalog__movies-card"
           onClick={[Function]}
-          type="button"
+          onMouseEnter={[Function]}
+          onMouseLeave={[Function]}
         >
-          Show more
-        </button>
+          <div
+            className="small-movie-card__image"
+          >
+            <video
+              className="player__video"
+              poster="test.preview"
+              src="test.src"
+            />
+            <img
+              alt="Test movie"
+              height="175"
+              src="test.preview"
+              width="280"
+            />
+          </div>
+          <h3
+            className="small-movie-card__title"
+          >
+            <a
+              className="small-movie-card__link"
+              href="movie-page.html"
+            >
+              Test movie
+            </a>
+          </h3>
+        </article>
       </div>
+      
     </section>
     <footer
       className="page-footer"
@@ -176,6 +221,8 @@ Array [
       >
         <a
           className="logo__link logo__link--light"
+          href="/"
+          onClick={[Function]}
         >
           <span
             className="logo__letter logo__letter--1"

@@ -6,8 +6,6 @@ import MoviePage from '../movie-page/movie-page.jsx';
 import {connect} from 'react-redux';
 import {ActionCreator} from '../../reducer/application/application';
 import FullScreenPlayer from '../full-screen-player/full-screen-player.jsx';
-import {getUniqueGenres, getGenreMovies} from '../../reducer/data/selectors';
-import {getGenre} from '../../reducer/application/selectors';
 import SignIn from '../sign-in/sign-in.jsx';
 import {getAuthStatus} from '../../reducer/user/selectors';
 import {Operation as UserOperation, ActionCreator as UserActionCreator, AuthorizationStatus} from '../../reducer/user/user';
@@ -64,8 +62,6 @@ class App extends PureComponent {
 }
 
 App.propTypes = {
-  genres: PropTypes.array.isRequired,
-  activeGenre: PropTypes.string.isRequired,
   onCardClick: PropTypes.func.isRequired,
   onPlayMovieClick: PropTypes.func.isRequired,
   authorizationStatus: PropTypes.string.isRequired,
@@ -74,9 +70,6 @@ App.propTypes = {
 };
 
 const mapStateToProps = (state) => ({
-  movies: getGenreMovies(state),
-  activeGenre: getGenre(state),
-  genres: getUniqueGenres(state),
   authorizationStatus: getAuthStatus(state),
 });
 

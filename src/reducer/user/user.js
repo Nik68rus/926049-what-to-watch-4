@@ -1,4 +1,5 @@
 import {extend} from '../../utils';
+import {createUser} from '../../adapters/user';
 
 export const AuthorizationStatus = {
   AUTH: `AUTH`,
@@ -25,7 +26,7 @@ const ActionCreator = {
 
   setUser: (userData) => ({
     type: ActionType.SET_USER,
-    payload: userData,
+    payload: createUser(userData),
   }),
 };
 

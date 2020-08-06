@@ -135,6 +135,7 @@ FullScreenPlayer.propTypes = {
     title: PropTypes.string.isRequired,
     src: PropTypes.string.isRequired,
     preview: PropTypes.string.isRequired,
+    poster: PropTypes.string.isRequired,
   }).isRequired,
   history: PropTypes.object.isRequired,
 };

@@ -13,6 +13,8 @@ const videoMock = {
   preview: `src2`,
 };
 
+const children = <div className="children-component" />;
+
 describe(`VideoPlayer e2e tests`, () => {
   it(`VideoPlayer has Play and Pause states`, () => {
     const isPlaying = false;
@@ -21,7 +23,9 @@ describe(`VideoPlayer e2e tests`, () => {
           isPlaying={isPlaying}
           src={videoMock.src}
           poster={videoMock.preview}
-        />);
+        >
+          {children}
+        </VideoPlayer>);
 
     expect(videoPlayer.props().isPlaying).toEqual(false);
 

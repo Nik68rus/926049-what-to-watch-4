@@ -3,23 +3,43 @@ import renderer from 'react-test-renderer';
 import Tabs from './tabs';
 
 const movie = {
-  id: `id0`,
-  src: `https://upload.wikimedia.org/wikipedia/commons/transcoded/b/b3/Big_Buck_Bunny_Trailer_400p.ogv/Big_Buck_Bunny_Trailer_400p.ogv.360p.webm`,
-  preview: `img/war-of-the-worlds.jpg`,
-  title: `The Grand Budapest Hotel`,
-  poster: `img/the-grand-budapest-hotel-poster.jpg`,
-  background: `img/bg-the-grand-budapest-hotel.jpg`,
-  genre: `Drama`,
-  date: `2014`,
-  rating: 2.9,
-  rateCount: 240,
-  description: `In the 1930s, the Grand Budapest Hotel is a popular European ski resort, presided over by concierge Gustave H. (Ralph Fiennes). Zero, a junior lobby boy, becomes Gustave's friend and protege.Gustave prides himself on providing first-class service to the hotel's guests, including satisfying the sexual needs of the many elderly women who stay there. When one of Gustave's lovers dies mysteriously, Gustave finds himself the recipient of a priceless painting and the chief suspect in her murder.`,
-  director: `Wes Anderson`,
-  actors: [`Bill Murray`, `Edward Norton`, `Jude Law`, `Willem Dafoe`],
+  id: 1,
+  src: `test.src`,
+  preview: `test.preview`,
+  title: `Test movie`,
+  poster: `test.poster`,
+  background: `test.background`,
+  backgroundColor: `test.color`,
+  genre: `test.genre`,
+  date: 0,
+  rating: 0,
+  rateCount: 0,
+  descriptiom: `test.description`,
+  director: `test.director`,
+  actors: [`test.actor1`],
+  runTime: 0,
+  isFavorite: false,
+};
+
+const comment = {
+  id: 0,
+  user: {
+    id: 0,
+    name: `Mollie`,
+  },
+  rating: 0,
+  comment: `test.comment`,
+  date: `2020-06-29T16:06:01.831Z`,
 };
 
 it(`Tabs renders correctly`, () => {
-  const tree = renderer.create(<Tabs movie={movie} />).toJSON();
+  const tree = renderer.create(
+      <Tabs
+        movie={movie}
+        activeTab={`test`}
+        onTabClick={jest.fn()}
+        comments={[comment]}
+      />).toJSON();
   expect(tree).toMatchSnapshot();
 });
 

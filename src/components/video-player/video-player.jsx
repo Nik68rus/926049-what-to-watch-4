@@ -1,4 +1,5 @@
 import React, {PureComponent, Fragment} from 'react';
+import PropTypes from 'prop-types';
 
 export default class VideoPlayer extends PureComponent {
 
@@ -13,4 +14,8 @@ export default class VideoPlayer extends PureComponent {
 }
 
 VideoPlayer.propTypes = {
+  children: PropTypes.oneOfType([
+    PropTypes.arrayOf(PropTypes.node),
+    PropTypes.node,
+  ]).isRequired,
 };

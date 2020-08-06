@@ -30,7 +30,7 @@ class NewReview extends PureComponent {
   }
 
   render() {
-    const {movie, authorizationStatus} = this.props;
+    const {movie} = this.props;
     const {background, title, backgroundColor, poster} = movie;
 
     return (

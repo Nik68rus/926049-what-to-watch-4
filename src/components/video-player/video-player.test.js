@@ -8,6 +8,8 @@ const movie = {
   src: `source`,
 };
 
+const children = <div className="children-component" />;
+
 it(`Video player correctly renders`, () => {
   const {preview, src} = movie;
 
@@ -16,7 +18,9 @@ it(`Video player correctly renders`, () => {
     src={src}
     poster={preview}
     muted={true}
-  />, {
+  >
+    {children}
+  </VideoPlayer>, {
     createNodeMock: () => {
       return {};
     }

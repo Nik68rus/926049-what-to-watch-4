@@ -1,23 +1,104 @@
 import React from 'react';
 import renderer from 'react-test-renderer';
 import MoviePage from './movie-page';
+import {Provider} from 'react-redux';
+import configureStore from 'redux-mock-store';
+import {Router} from 'react-router-dom';
+import history from '../../history';
+import {AuthorizationStatus} from '../../reducer/user/user';
+import NameSpace from '../../reducer/name-space';
+
+const mockStore = configureStore([]);
 
 const movie = {
-  id: `id0`,
-  preview: `img/war-of-the-worlds.jpg`,
-  title: `The Grand Budapest Hotel`,
-  poster: `img/the-grand-budapest-hotel-poster.jpg`,
-  background: `img/bg-the-grand-budapest-hotel.jpg`,
-  genre: `Drama`,
-  date: `2014`,
-  rating: 8.9,
-  rateCount: 240,
-  description: `In the 1930s, the Grand Budapest Hotel is a popular European ski resort, presided over by concierge Gustave H. (Ralph Fiennes). Zero, a junior lobby boy, becomes Gustave's friend and protege.Gustave prides himself on providing first-class service to the hotel's guests, including satisfying the sexual needs of the many elderly women who stay there. When one of Gustave's lovers dies mysteriously, Gustave finds himself the recipient of a priceless painting and the chief suspect in her murder.`,
-  director: `Wes Anderson`,
-  actors: [`Bill Murray`, `Edward Norton`, `Jude Law`, `Willem Dafoe`],
+  id: 1,
+  src: `test.src`,
+  preview: `test.preview`,
+  title: `Test movie`,
+  poster: `test.poster`,
+  background: `test.background`,
+  backgroundColor: `test.color`,
+  genre: `test.genre`,
+  date: 0,
+  rating: 0,
+  rateCount: 0,
+  descriptiom: `test.description`,
+  director: `test.director`,
+  actors: [`test.actor1`],
+  runTime: 0,
+  isFavorite: false,
 };
 
+const movies = [{
+  id: 2,
+  src: `test.src`,
+  preview: `test.preview`,
+  title: `Test movie`,
+  poster: `test.poster`,
+  background: `test.background`,
+  backgroundColor: `test.color`,
+  genre: `test.genre`,
+  date: 0,
+  rating: 0,
+  rateCount: 0,
+  descriptiom: `test.description`,
+  director: `test.director`,
+  actors: [`test.actor1`],
+  runTime: 0,
+  isFavorite: false,
+}];
+
+const comment = {
+  id: 0,
+  user: {
+    id: 0,
+    name: `Mollie`,
+  },
+  rating: 0,
+  comment: `test.comment`,
+  date: `2020-06-29T16:06:01.831Z`,
+};
+
+const user = {
+  id: 3,
+  email: `test@mail.com`,
+  name: `test`,
+  avatarUrl: `test.avatarUrl`,
+};
+
+
 it(`Card rendered correctly`, () => {
-  const tree = renderer.create(<MoviePage movie={movie} similarMovies={[]} onCardClick={() => {}}/>).toJSON();
+  const store = mockStore({
+    [NameSpace.DATA]: {
+      promoMovie: movie,
+      films: [movie],
+      favoriteFilms: [movie],
+      comments: [comment],
+    },
+    [NameSpace.APPLICATION]: {
+      genre: `All genres`,
+      activeMovie: 1,
+      cardsToShow: 8,
+    },
+    [NameSpace.USER]: {
+      authorizationStatus: AuthorizationStatus.NO_AUTH,
+      user
+    },
+  });
+
+  const tree = renderer.create(
+      <Provider store={store}>
+        <Router history={history}>
+          <MoviePage
+            movie={movie}
+            similarMovies={movies}
+            onCardClick={jest.fn()}
+            onPlayMovieClick={jest.fn()}
+            onAddToFavorite={jest.fn()}
+            authorizationStatus={AuthorizationStatus.AUTH}
+            comments={[comment]}
+          />
+        </Router>
+      </Provider>).toJSON();
   expect(tree).toMatchSnapshot();
 });

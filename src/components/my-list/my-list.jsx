@@ -1,4 +1,5 @@
 import React from 'react';
+import PropTypes from 'prop-types';
 import UserBlock from '../user-block/user-block';
 import Footer from '../footer/footer';
 import {getMovies} from '../../reducer/data/selectors';
@@ -31,6 +32,12 @@ const MyList = (props) => {
     </div>
 
   );
+};
+
+MyList.propTypes = {
+  authorizationStatus: PropTypes.string.isRequired,
+  favoriteList: PropTypes.array.isRequired,
+  onCardClick: PropTypes.func.isRequired,
 };
 
 const mapStateToProps = (state) => ({
